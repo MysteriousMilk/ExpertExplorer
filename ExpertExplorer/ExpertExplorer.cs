@@ -22,9 +22,24 @@ namespace ExpertExplorer
         {
             // Jotunn comes with its own Logger class to provide a consistent Log style for all mods using it
             Jotunn.Logger.LogInfo("ExpertExplorer has landed");
-            
+
             // To learn more about Jotunn's features, go to
             // https://valheim-modding.github.io/Jotunn/tutorials/overview.html
+            ZoneManager.OnVanillaLocationsAvailable += OnVanillaLocationAvailable;
+        }
+
+        private void OnVanillaLocationAvailable()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        // Called every frame
+        private void Update()
+        {
+            if (ZInput.instance == null)
+                return;
+
+
         }
     }
 }
