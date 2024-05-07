@@ -1,10 +1,10 @@
 ﻿{
-  "name": "Expert Explorer",
-  "description": "",
-  "version_number": "0.0.1",
-  "website_url": "",
-  "dependencies": [
-    "denikson-BepInExPack_Valheim-5.4.2202",
-    "ValheimModding-Jotunn-2.15.0"
-  ]
+    "name": "Expert Explorer",
+    "description": "Adds a new Exploration Skill to the game. Exploring and finding new points of interest will increase the skill. As the skill increase, so will the player's sight range (on the minimap.)",
+    "version_number": "1.0.0",
+    "website_url": "",
+    "dependencies": [
+        "denikson-BepInExPack_Valheim-5.4.2202",
+        "ValheimModding-Jotunn-2.15.0"
+    ]
 }
