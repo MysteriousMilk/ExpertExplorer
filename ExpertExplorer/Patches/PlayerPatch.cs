@@ -20,5 +20,21 @@ namespace ExpertExplorer.Patches
             __instance.InitializeExplorationData();
             __instance.ExplorationData().Save(__instance);
         }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Player), "AddKnownBiome")]
+        private static void AddKnownBiome(ref Player __instance, ref Heightmap.Biome biome)
+        {
+            if (!__instance.IsBiomeKnown(biome))
+            {
+                var explorationData = Player.m_localPlayer.ExplorationData();
+
+                if (explorationData != null)
+                {
+                    explorationData.FlagAsDiscovered(biome);
+                    __instance.RaiseSkill(ExpertExplorer.ExplorationSkillType);
+                }
+            }
+        }
     }
 }

@@ -13,12 +13,12 @@ namespace ExpertExplorer
         public Dictionary<Vector2i, int> DiscoveredLocations = new Dictionary<Vector2i, int>();
         public List<int> DiscoveredBiomes = new List<int>();
 
-        internal bool IsZoneLocationAlreadyDiscovered(Vector2i zone)
+        public bool IsZoneLocationAlreadyDiscovered(Vector2i zone)
         {
             return DiscoveredLocations.ContainsKey(zone);
         }
 
-        internal void FlagAsDiscovered(ZoneData zoneData)
+        public void FlagAsDiscovered(ZoneData zoneData)
         {
             if (zoneData == null)
                 return;
@@ -27,6 +27,16 @@ namespace ExpertExplorer
                 return;
 
             DiscoveredLocations[zoneData.ZoneId] = zoneData.ZoneLocation.Hash;
+        }
+
+        public void FlagAsDiscovered(Heightmap.Biome biome)
+        {
+            int biomeIndex = Heightmap.s_biomeToIndex[biome];
+
+            if (DiscoveredBiomes.Contains(biomeIndex))
+                return;
+
+            DiscoveredBiomes.Add(biomeIndex);
         }
 
         public void Save(Player player)

@@ -10,14 +10,12 @@ BepInEx is required for this mod. Assuming BepInEx is already installed, locate 
 - Common names for locations / points of interst
 - Minimap indication of current location
 
-## Changelog
-**v1.0.0 - Initial Release** Implemented base mod functionality.
-
-## Known issues
-You can find the github at:
+## Contact and Issue Reporting
+You can report issues with the mod at the github link below.\
 <https://github.com/MysteriousMilk/ExpertExplorer>
 
-## Contact
-You can report issues with the mod at the github link above.
-
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
+
+## Changelog
+**v1.0.0 - Initial Release**\
+Implemented base mod functionality.
