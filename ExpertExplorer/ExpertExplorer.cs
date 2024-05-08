@@ -28,23 +28,46 @@ namespace ExpertExplorer
 
         private Harmony harmony;
 
+        private const float POST_INTRO_DELAY = 1.0f;        // Delay after the intro before the mod starts checking for locations
         private const float ZONE_CHECK_FREQUENCY = 1.0f;    // Frequency at which the zone is checked
 
         private static ZoneData currentZoneData = null;
         private static Vector2i currentZone;
         private static string lastEvaluatedLocation = string.Empty;
         private static float zoneCheckTimer = 0.0f;
+        private static bool introLastFrame = false;
         private static bool locationsAvailable = false;
 
         private static List<Chat.WorldTextInstance> discoverTexts = new List<Chat.WorldTextInstance>();
 
-        // Config variables
-        public static ConfigEntry<float> MaxExploreRadius;
-        public static ConfigEntry<float> DiscoverDistance;
+        #region Config Variables
+        /// <summary>
+        /// Factor applied to skill gain. Higher number means faster skill gain.
+        /// </summary>
         public static ConfigEntry<float> SkillXpFactor;
 
-        public static Skills.SkillType ExplorationSkillType;
+        /// <summary>
+        /// Max explore radius used when the Exploration Skill is at 100.
+        /// </summary>
+        public static ConfigEntry<float> MaxExploreRadius;
 
+        /// <summary>
+        /// Distance between the player and the bounds of a location required to mark the location as discovered.
+        /// </summary>
+        public static ConfigEntry<float> DiscoverDistance;
+        #endregion
+
+        #region Public Variables
+        /// <summary>
+        /// Skill type identifier for the exploration skill. Used to retreive the exploration skill
+        /// from the Valheim Skill registry.
+        /// </summary>
+        public static Skills.SkillType ExplorationSkillType;
+        #endregion
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public ExpertExplorer()
         {
             harmony = new Harmony(PluginGUID);
@@ -94,7 +117,10 @@ namespace ExpertExplorer
                 return;
 
             if (Player.m_localPlayer.InIntro())
+            {
+                introLastFrame = true;
                 return;
+            }
 
             if (Player.m_localPlayer.InCutscene())
                 return;
@@ -106,6 +132,15 @@ namespace ExpertExplorer
             {
                 Jotunn.Logger.LogWarning("Update skipped because there is no exploration data.");
                 return;
+            }
+
+            // If we just exited the intro sequence, add a slight delay before checking locations.
+            // This will issure that we don't immediately "discover" the sacrificial stones as the player
+            // is "dropping in".
+            if (introLastFrame)
+            {
+                zoneCheckTimer = POST_INTRO_DELAY;
+                introLastFrame = false;
             }
 
             // reduce the timer this frame but don't let it fall below 0
@@ -150,7 +185,6 @@ namespace ExpertExplorer
 
                         // add the text to the world
                         AddDiscoverTextToWorld(text, textPos);
-                        Jotunn.Logger.LogInfo(text);
                     }
                 }
             }

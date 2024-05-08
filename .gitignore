@@ -374,3 +374,5 @@ Environment.props
 # not the generated dll for thunderstore
 */Package/plugins/*
 /ExpertExplorer/Package/ExpertExplorer.dll
+/ExpertExplorer/Package/CHANGELOG.md
+/ExpertExplorer/Package/README.md

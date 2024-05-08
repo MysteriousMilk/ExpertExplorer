@@ -65,6 +65,7 @@ if($Target.Equals("Release")) {
     Copy-Item -Path "$TargetPath\$TargetAssembly" -Destination "$PackagePath\$TargetAssembly" -Force
 	Copy-Item -Path "$TargetPath\Assets\" -Destination "$PackagePath\" -Force -Recurse
     Copy-Item -Path "$ProjectPath\README.md" -Destination "$PackagePath\README.md" -Force
+	Copy-Item -Path "$ProjectPath\CHANGELOG.md" -Destination "$PackagePath\CHANGELOG.md" -Force
     Compress-Archive -Path "$PackagePath\*" -DestinationPath "$TargetPath\$TargetAssembly.zip" -Force
 }
 

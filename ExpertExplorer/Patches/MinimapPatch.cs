@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using Jotunn;
 using System;
 using TMPro;
 using UnityEngine;
@@ -48,6 +47,8 @@ namespace ExpertExplorer.Patches
         [HarmonyPatch(typeof(Minimap), "UpdateBiome")]
         private static void UpdateBiome(ref Minimap __instance, ref Player player)
         {
+            // Called from "UpdateBiome" so that all pre-condition checks for "UpdateBiome"
+            // also apply for updating the location.
             UpdateLocation(player);
         }
 

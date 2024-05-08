@@ -27,6 +27,8 @@ namespace ExpertExplorer
                 return;
 
             DiscoveredLocations[zoneData.ZoneId] = zoneData.ZoneLocation.Hash;
+
+            Jotunn.Logger.LogInfo($"Discovered location {zoneData.LocalizedLocationName}");
         }
 
         public void FlagAsDiscovered(Heightmap.Biome biome)
@@ -37,6 +39,8 @@ namespace ExpertExplorer
                 return;
 
             DiscoveredBiomes.Add(biomeIndex);
+
+            Jotunn.Logger.LogInfo($"Discovered biome {biome}");
         }
 
         public void Save(Player player)
@@ -89,15 +93,16 @@ namespace ExpertExplorer
                 }
             }
 
-            if (LoadValue(fromPlayer, nameof(DiscoveredBiomes), out var discoveredBiomesData))
-            {
-                var pkg = new ZPackage(discoveredBiomesData);
-                int count = pkg.ReadInt();
-                for (int i = 0; i < count; i++)
-                    DiscoveredBiomes.Add(pkg.ReadInt());
-            }
+            foreach (var biome in fromPlayer.m_knownBiome)
+                DiscoveredBiomes.Add(Heightmap.s_biomeToIndex[biome]);
 
 #if DEBUG
+            Jotunn.Logger.LogDebug("Previously Discovered Biomes:");
+            foreach (int biomeIndex in DiscoveredBiomes)
+            {
+                Jotunn.Logger.LogDebug(Heightmap.s_indexToBiome[biomeIndex].ToString());
+            }
+
             Jotunn.Logger.LogDebug("Previously Discovered Locations:");
             foreach (var kvp in DiscoveredLocations)
             {
