@@ -1,4 +1,4 @@
-﻿# Expert Explorer
+# Expert Explorer
 A Valheim mod that adds a new Exploration Skill to the game. Exploring and finding new points of interest will increase the skill. As the skill increases, so will the player's sight range (on the minimap.)
 
 <table>
