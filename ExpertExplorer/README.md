@@ -30,5 +30,8 @@ You can report issues with the mod at the github link below.\
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
 
 ## Changelog
+**v1.0.1 - Localization Fix**\
+Internalized localization (at least for now) because r2modman condenses the directory structure to a single subdirectory.
+
 **v1.0.0 - Initial Release**\
 Implemented base mod functionality.
