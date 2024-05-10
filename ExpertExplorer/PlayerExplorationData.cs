@@ -23,10 +23,10 @@ namespace ExpertExplorer
             if (zoneData == null)
                 return;
 
-            if (zoneData.ZoneLocation == null)
+            if (string.IsNullOrEmpty(zoneData.LocationPrefab))
                 return;
 
-            DiscoveredLocations[zoneData.ZoneId] = zoneData.ZoneLocation.Hash;
+            DiscoveredLocations[zoneData.ZoneId] = zoneData.LocationHash;
 
             Jotunn.Logger.LogInfo($"Discovered location {zoneData.LocalizedLocationName}");
         }
@@ -93,23 +93,18 @@ namespace ExpertExplorer
                 }
             }
 
+            // Load the Discovered Biome's list
+            if (LoadValue(fromPlayer, nameof(DiscoveredBiomes), out var discoveredBiomesData))
+            {
+                var pkg = new ZPackage(discoveredBiomesData);
+                int count = pkg.ReadInt();
+                for (int i = 0; i < count; i++)
+                    DiscoveredBiomes.Add(pkg.ReadInt());
+            }
+
+            // In case the user just loaded this mod, see if they've already discovered some biomes
             foreach (var biome in fromPlayer.m_knownBiome)
-                DiscoveredBiomes.Add(Heightmap.s_biomeToIndex[biome]);
-
-#if DEBUG
-            Jotunn.Logger.LogDebug("Previously Discovered Biomes:");
-            foreach (int biomeIndex in DiscoveredBiomes)
-            {
-                Jotunn.Logger.LogDebug(Heightmap.s_indexToBiome[biomeIndex].ToString());
-            }
-
-            Jotunn.Logger.LogDebug("Previously Discovered Locations:");
-            foreach (var kvp in DiscoveredLocations)
-            {
-                var loc = ZoneSystem.instance.GetLocation(kvp.Value);
-                Jotunn.Logger.LogDebug($"Location: {loc.m_prefabName}, Zone: {kvp.Key}");
-            }
-#endif
+                FlagAsDiscovered(biome);
         }
 
         private static void SaveValue(Player player, string key, string value)

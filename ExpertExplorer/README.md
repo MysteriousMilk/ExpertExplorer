@@ -30,6 +30,9 @@ You can report issues with the mod at the github link below.\
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
 
 ## Changelog
+**v1.1.0 - Multiplayer Support**\
+Mod now works in multiplayer. Added RPC calls to communicate location data between the server and client.
+
 **v1.0.1 - Localization Fix**\
 Internalized localization (at least for now) because r2modman condenses the directory structure to a single subdirectory.
 
