@@ -29,16 +29,19 @@ namespace ExpertExplorer
         private Harmony harmony;
 
         private const float POST_INTRO_DELAY = 1.0f;        // Delay after the intro before the mod starts checking for locations
-        private const float ZONE_CHECK_FREQUENCY = 1.0f;    // Frequency at which the zone is checked
+        private const float ZONE_CHECK_FREQUENCY = 1.5f;    // Frequency at which the zone is checked
+        private const float ZONE_RPC_REQUEST_FREQUENCY = 2.0f;
 
         private static ZoneData currentZoneData = null;
         private static Vector2i currentZone;
         private static string lastEvaluatedLocation = string.Empty;
         private static float zoneCheckTimer = 0.0f;
+        private static float zoneRpcRequestTimer = 0.0f;
         private static bool introLastFrame = false;
         private static bool locationsAvailable = false;
 
         private static List<Chat.WorldTextInstance> discoverTexts = new List<Chat.WorldTextInstance>();
+        private static Dictionary<Vector2i, ZoneData> zoneDataCache = new Dictionary<Vector2i, ZoneData>();
 
         #region Config Variables
         /// <summary>
@@ -97,6 +100,17 @@ namespace ExpertExplorer
             explorerSkill.Description = "$skill_exploration_desc";
             explorerSkill.IncreaseStep = SkillXpFactor.Value;
             ExplorationSkillType = SkillManager.Instance.AddSkill(explorerSkill);
+
+            //ZoneHelper.Instance.RegisterRPC();
+            ZoneHelper.Instance.SetZoneDataAction = (zoneData) =>
+            {
+                if (currentZone == zoneData.ZoneId)
+                {
+                    // Update the client-side record of the zone information
+                    zoneDataCache[currentZone] = zoneData;
+                    currentZoneData = zoneData;
+                }
+            };
 
             Jotunn.Logger.LogInfo($"ExpertExplorer v{PluginVersion} loaded and patched.");
         }
@@ -256,7 +270,7 @@ namespace ExpertExplorer
             }
 
             if (Player.m_localPlayer.InCutscene())
-                return;
+                return;            
 
             var playerPos = Player.m_localPlayer.transform.position;
             var explorationData = Player.m_localPlayer.ExplorationData();
@@ -278,19 +292,27 @@ namespace ExpertExplorer
 
             // reduce the timer this frame but don't let it fall below 0
             zoneCheckTimer = Mathf.Max(0.0f, zoneCheckTimer - Time.deltaTime);
+            zoneRpcRequestTimer = Mathf.Max(0.0f, zoneRpcRequestTimer - Time.deltaTime);
 
             // check to see if the timer has elapsed
             if (zoneCheckTimer == 0.0f)
             {
                 Vector2i zone = ZoneSystem.instance.GetZone(playerPos);
 
-                // if the zone has changed, update the zone information
                 if (zone != currentZone)
                 {
-                    currentZone = zone;
-                    currentZoneData = ZoneHelper.GetZoneData(zone);
+#if DEBUG
+                    Jotunn.Logger.LogInfo($"Entering zone ({zone.x}, {zone.y})");
+#endif
 
-                    Jotunn.Logger.LogDebug($"Entering zone ({zone.x}, {zone.y}) - Location {currentZoneData?.ZoneLocation?.m_prefabName}");
+                    currentZone = zone;
+                    zoneDataCache.TryGetValue(currentZone, out currentZoneData);
+                }
+
+                if (currentZoneData == null && zoneRpcRequestTimer == 0f)
+                {
+                    zoneRpcRequestTimer = ZONE_RPC_REQUEST_FREQUENCY;
+                    ZoneHelper.Instance.Client_RequestZoneData(currentZone);
                 }
 
                 zoneCheckTimer = ZONE_CHECK_FREQUENCY;
@@ -298,13 +320,13 @@ namespace ExpertExplorer
 
             if (currentZoneData != null && currentZoneData.IsValid() && !explorationData.IsZoneLocationAlreadyDiscovered(currentZone))
             {
-                if (IsLookingAtLocation(Player.m_localPlayer, currentZoneData.ZoneLocation) ||
-                    IsInsideLocation(Player.m_localPlayer, currentZoneData.ZoneLocation))
+                if (IsLookingAtLocation(Player.m_localPlayer, currentZoneData) ||
+                    IsInsideLocation(Player.m_localPlayer, currentZoneData))
                 {
-                    if (currentZoneData.ZoneLocation.m_prefabName != lastEvaluatedLocation)
+                    if (currentZoneData.LocationPrefab != lastEvaluatedLocation)
                     {
                         // location discovered
-                        lastEvaluatedLocation = currentZoneData.ZoneLocation.m_prefabName;
+                        lastEvaluatedLocation = currentZoneData.LocationPrefab;
                         explorationData.FlagAsDiscovered(currentZoneData);
                         explorationData.Save(Player.m_localPlayer);
                         Player.m_localPlayer.RaiseSkill(ExplorationSkillType);
@@ -335,8 +357,8 @@ namespace ExpertExplorer
         {
             if (currentZoneData != null && currentZoneData.IsValid())
             {
-                if (IsLookingAtLocation(player, currentZoneData.ZoneLocation) ||
-                    IsInsideLocation(player, currentZoneData.ZoneLocation))
+                if (IsLookingAtLocation(player, currentZoneData) ||
+                    IsInsideLocation(player, currentZoneData))
                 {
                     return currentZoneData;
                 }
@@ -350,9 +372,9 @@ namespace ExpertExplorer
         /// <param name="player">The player.</param>
         /// <param name="location">The location to check.</param>
         /// <returns>True if the player is looking at the given location, False if not.</returns>
-        private static bool IsLookingAtLocation(Player player, ZoneSystem.ZoneLocation location)
+        private static bool IsLookingAtLocation(Player player, ZoneData zoneData)
         {
-            float locationRadius = Mathf.Max(location.m_exteriorRadius, location.m_interiorRadius);
+            float locationRadius = zoneData.LocationRadiusMax;
             var playerPos = player.transform.position;
 
             float totalDistance = locationRadius + DiscoverDistance.Value;
@@ -378,10 +400,9 @@ namespace ExpertExplorer
         /// <param name="player">The player.</param>
         /// <param name="location">The location to check.</param>
         /// <returns>True if the player is in the given location, false if not.</returns>
-        private static bool IsInsideLocation(Player player, ZoneSystem.ZoneLocation location)
+        private static bool IsInsideLocation(Player player, ZoneData zoneData)
         {
-            float locationRadius = Mathf.Max(location.m_exteriorRadius, location.m_interiorRadius);
-            return Vector3.Distance(player.transform.position, currentZoneData.LocationPosition) < locationRadius;
+            return Vector3.Distance(player.transform.position, currentZoneData.LocationPosition) < zoneData.LocationRadiusMax;
         }
 
         private void AddDiscoverTextToWorld(string text, Vector3 pos)

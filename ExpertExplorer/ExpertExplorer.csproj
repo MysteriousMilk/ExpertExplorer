@@ -90,6 +90,18 @@
       <HintPath>..\..\..\ValheimUnity\valheim\AuxiliaryFiles\GameAssemblies\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\BepInEx.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx.Harmony">
+      <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\BepInEx.Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx.Preloader">
+      <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\BepInEx.Preloader.dll</HintPath>
+    </Reference>
+    <Reference Include="HarmonyXInterop">
+      <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\HarmonyXInterop.dll</HintPath>
+    </Reference>
     <Reference Include="Jotunn, Version=2.15.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\JotunnLib.2.15.0\lib\net462\Jotunn.dll</HintPath>
     </Reference>
@@ -131,6 +143,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Patches\ZNetPatch.cs" />
     <Compile Include="Patches\MinimapPatch.cs" />
     <Compile Include="Patches\PlayerPatch.cs" />
     <Compile Include="PlayerExplorationData.cs" />
