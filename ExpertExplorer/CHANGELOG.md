@@ -1,3 +1,7 @@
+### Version 1.1.1
+------
+- Rebuild for Ashlands update.
+
 ### Version 1.1.0
 ------
 - Mod now works in multiplayer.
