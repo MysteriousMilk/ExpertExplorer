@@ -30,6 +30,9 @@ You can report issues with the mod at the github link below.\
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
 
 ## Changelog
+**v1.1.2 - Player Save Fix**\
+Fix issue where saved biome data would duplicate everytime the player entered a biome, thus driving up the player file size.
+
 **v1.1.1 - Ashlands Update**\
 Mod rebuilt to support the Ashlands update.
 

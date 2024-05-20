@@ -68,7 +68,7 @@ namespace ExpertExplorer
             pkg.Write(DiscoveredBiomes.Count);
             foreach (int biomeIndex in  DiscoveredBiomes)
                 pkg.Write(biomeIndex);
-            SaveValue(player, nameof(DiscoveredBiomes), pkg.GetBase64());
+            SaveValue(player, "ExpertExplorerDiscoveredBiomes", pkg.GetBase64());
         }
 
         public void Load(Player fromPlayer)
@@ -93,14 +93,30 @@ namespace ExpertExplorer
                 }
             }
 
+#if DEBUG
+            Jotunn.Logger.LogInfo($"Discoverd Location Count - {DiscoveredLocations.Count}");
+#endif
+
+            // Remove old biome storage (which bugged the file size)
+            fromPlayer.m_customData.Remove("DiscoveredBiomes");
+
             // Load the Discovered Biome's list
-            if (LoadValue(fromPlayer, nameof(DiscoveredBiomes), out var discoveredBiomesData))
+            DiscoveredBiomes.Clear();
+            if (LoadValue(fromPlayer, "ExpertExplorerDiscoveredBiomes", out var discoveredBiomesData))
             {
                 var pkg = new ZPackage(discoveredBiomesData);
                 int count = pkg.ReadInt();
                 for (int i = 0; i < count; i++)
-                    DiscoveredBiomes.Add(pkg.ReadInt());
+                {
+                    int biomeIndex = pkg.ReadInt();
+                    if (!DiscoveredBiomes.Contains(biomeIndex))
+                        DiscoveredBiomes.Add(biomeIndex);
+                }
             }
+
+#if DEBUG
+            Jotunn.Logger.LogInfo($"Discoverd Biome Count - {DiscoveredBiomes.Count}");
+#endif
 
             // In case the user just loaded this mod, see if they've already discovered some biomes
             foreach (var biome in fromPlayer.m_knownBiome)

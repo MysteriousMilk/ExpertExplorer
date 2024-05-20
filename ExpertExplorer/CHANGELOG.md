@@ -1,3 +1,7 @@
+### Version 1.1.2
+------
+- Fix issue where saved biome data would duplicate everytime the player entered a biome, thus driving up the player file size. Affected player files will fix themselves upon the next save after this update.
+
 ### Version 1.1.1
 ------
 - Rebuild for Ashlands update.
