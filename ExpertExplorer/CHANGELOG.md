@@ -1,7 +1,13 @@
+### Version 1.3
+------
+- Added Auto-pinning option for dungeon locations
+- Fixed issue where mod-tracked pins would not be removed from custom player data if the player removes the pin from the map
+- Fixed issue where the key reported in the "Discovered Location" UI was static and not driven by the key code in the config
+
 ### Version 1.2
 ------
 - Added names for Ashlands locations
-- Location text above minimap now displace the correct location when in an interior dungeon
+- Location text above minimap now displays the correct location when in an interior dungeon
 - Replaced in-world text with MessageHud messages when a location is discovered
 - Added ability to pin locations to the map with a hotkey
 - Server synced config variables

@@ -13,6 +13,7 @@ using System.Linq;
 using static ZoneSystem;
 using static MessageHud;
 using Jotunn;
+using System.Collections;
 
 namespace ExpertExplorer
 {
@@ -23,7 +24,7 @@ namespace ExpertExplorer
     {
         public const string PluginGUID = "com.milkwyzard.ExpertExplorer";
         public const string PluginName = "ExpertExplorer";
-        public const string PluginVersion = "1.2";
+        public const string PluginVersion = "1.3";
         public const string SkillId = $"{PluginGUID}.Exploration";
         
         // Use this class to add your own localization to the game
@@ -44,7 +45,6 @@ namespace ExpertExplorer
         private static bool introLastFrame = false;
         private static bool locationsAvailable = false;
 
-        private static List<Chat.WorldTextInstance> discoverTexts = new List<Chat.WorldTextInstance>();
         private static Dictionary<Vector2i, ZoneData> zoneDataCache = new Dictionary<Vector2i, ZoneData>();
         private static Dictionary<Vector2i, Sprite> locationSpriteMap = new Dictionary<Vector2i, Sprite>();
         private static Dictionary<Vector2i, Minimap.PinData> locationPins = new Dictionary<Vector2i, Minimap.PinData>();
@@ -60,6 +60,20 @@ namespace ExpertExplorer
             "Vendor_BlackForest",
             "Hildir_camp",
             "Mistlands_DvergrBossEntrance1"
+        };
+
+        private static List<string> dungeonLocations = new List<string>()
+        {
+            "Mistlands_DvergrBossEntrance1",
+            "Hildir_cave",
+            "Hildir_crypt",
+            "Crypt2",
+            "Crypt3",
+            "Crypt4",
+            "Mistlands_DvergrTownEntrance1",
+            "Mistlands_DvergrTownEntrance2",
+            "MountainCave02",
+            "SunkenCrypt4"
         };
 
         #region Config Variables
@@ -82,6 +96,11 @@ namespace ExpertExplorer
         /// Key used to pin a location to the minimap.
         /// </summary>
         public static ConfigEntry<KeyboardShortcut> PinKey;
+
+        /// <summary>
+        /// Flag that can be set to have dungeons auto-pin to the map when discovered.
+        /// </summary>
+        public static ConfigEntry<bool> AutoPinDungeonLocations;
         #endregion
 
         #region Public Variables
@@ -115,6 +134,7 @@ namespace ExpertExplorer
             MaxExploreRadius = Config.Bind("Exploration", "MaxExploreRadius", 200f, new ConfigDescription("Max explore radius used when the Exploration Skill is at 100. Range 100-300.", new AcceptableValueRange<float>(100f, 300f), isAdminOnly));
             DiscoverDistance = Config.Bind("Exploration", "DiscoverDistance", 10f, new ConfigDescription("Distance between the player and the bounds of a location required to mark the location as discovered. Range 0-50.", new AcceptableValueRange<float>(0f, 50f), isAdminOnly));
             PinKey = Config.Bind("Hotkeys", "Pin to Mini-Map Key", new KeyboardShortcut(KeyCode.P), "Hotkey used to add a pin to the mini-map when a new location is discovered.");
+            AutoPinDungeonLocations = Config.Bind("General", "Auto-Pin Dungeon Locations", true, "Flag that can be set to have dungeons auto-pin to the map when discovered.");
 
             AddLocalizations();
 
@@ -390,6 +410,12 @@ namespace ExpertExplorer
                             Jotunn.Logger.LogInfo($"No sprite icon for location {currentZoneData.LocationPrefab}");
 
                         QueueFoundLocationMsg(icon, "Location Discovered", currentZoneData.LocalizedLocationName, IsSpecialLocation(currentZoneData.LocationPrefab));
+
+                        if (AutoPinDungeonLocations.Value &&
+                            IsDungeonLocation(currentZoneData.LocationPrefab))
+                        {
+                            StartCoroutine(AutoPinLocation(currentZoneData, explorationData));
+                        }
                     }
                 }
             }
@@ -402,26 +428,14 @@ namespace ExpertExplorer
                     if (IsLookingAtLocation(Player.m_localPlayer, currentZoneData) ||
                         IsInsideLocation(Player.m_localPlayer, currentZoneData))
                     {
-                        Vector3 pinPos = currentZoneData.LocationPosition;
-                        string pinName = currentZoneData.LocalizedLocationName;
-
                         if (!locationPins.ContainsKey(currentZone) &&
                             !IsSpecialLocation(currentZoneData.LocationPrefab))
                         {
-                            var pinData = Minimap.instance.AddPin(pinPos, Minimap.PinType.Icon3, pinName, true, false, 0L);
-                            locationPins[currentZone] = pinData;
-                            explorationData.FlagAsPinned(currentZone, pinData);
-                            Player.m_localPlayer.Message(MessageType.TopLeft, $"Location pinned to minimap.");
-
-#if DEBUG
-                            Jotunn.Logger.LogInfo("Pin Added.");
-#endif
+                            PinLocation(currentZoneData, explorationData);
                         }
                     }
                 }
             }
-
-            UpdateDiscoverTexts(Time.deltaTime);
         }
 
         /// <summary>
@@ -455,6 +469,16 @@ namespace ExpertExplorer
         }
 
         /// <summary>
+        /// Check to see if a location is considered a "dungeon" location.
+        /// </summary>
+        /// <param name="locationPrefabName">Name of the location prefab.</param>
+        /// <returns>True if the location is considered a "dungeon", False if not.</returns>
+        public static bool IsDungeonLocation(string locationPrefabName)
+        {
+            return dungeonLocations.Contains(locationPrefabName);
+        }
+
+        /// <summary>
         /// Called when a pin is removed from the minimap. This will check the removed pin was the 
         /// pinned location from this zone. If so, update our list of tracked pins.
         /// </summary>
@@ -471,7 +495,33 @@ namespace ExpertExplorer
                 locationPins[zone].m_name == pinData.m_name)
             {
                 locationPins.Remove(zone);
+
+                // remove from custom player data
+                var explorationData = Player.m_localPlayer.ExplorationData();
+                explorationData?.RemovePin(zone);
             }
+        }
+
+        private static IEnumerator AutoPinLocation(ZoneData zoneData, PlayerExplorationData explorationData)
+        {
+            yield return new WaitForSeconds(1.0f);
+            PinLocation(zoneData, explorationData);
+        }
+
+        private static void PinLocation(ZoneData zoneData, PlayerExplorationData explorationData)
+        {
+            Vector3 pinPos = zoneData.LocationPosition;
+            Vector2i zone = zoneData.ZoneId;
+            string pinName = zoneData.LocalizedLocationName;
+
+            var pinData = Minimap.instance.AddPin(pinPos, Minimap.PinType.Icon3, pinName, true, false, 0L);
+            locationPins[zone] = pinData;
+            explorationData.FlagAsPinned(zone, pinData);
+            Player.m_localPlayer.Message(MessageType.TopLeft, $"Location pinned to minimap.");
+
+#if DEBUG
+            Jotunn.Logger.LogInfo("Pin Added.");
+#endif
         }
 
         /// <summary>
@@ -570,11 +620,13 @@ namespace ExpertExplorer
         /// <param name="icon"></param>
         /// <param name="topic"></param>
         /// <param name="description"></param>
-        public void QueueFoundLocationMsg(Sprite icon, string topic, string description, bool isSpecialLocation)
+        public static void QueueFoundLocationMsg(Sprite icon, string topic, string description, bool isSpecialLocation)
         {
             string desc = description;
+            string keyCode = PinKey.Value.ToString();
+
             if (!isSpecialLocation)
-                desc += "\nPress [<color=yellow><b>P</b></color>] to add a pin";
+                desc += $"\nPress [<color=yellow><b>{keyCode}</b></color>] to add a pin";
 
             UnlockMsg unlockMsg = new UnlockMsg();
             unlockMsg.m_icon = icon;
@@ -582,70 +634,6 @@ namespace ExpertExplorer
             unlockMsg.m_description = desc;
             MessageHud.instance.m_unlockMsgQueue.Enqueue(unlockMsg);
             MessageHud.instance.AddLog(topic + ": " + description);
-        }
-
-        private void AddDiscoverTextToWorld(string text, Vector3 pos)
-        {
-            Chat.WorldTextInstance worldTextInstance = new Chat.WorldTextInstance();
-            worldTextInstance.m_gui = UnityEngine.Object.Instantiate(Chat.instance.m_worldTextBase, Chat.instance.transform);
-            worldTextInstance.m_gui.gameObject.SetActive(value: true);
-            worldTextInstance.m_text = text;
-            worldTextInstance.m_position = pos;
-            worldTextInstance.m_go = Player.m_localPlayer.gameObject;
-            Transform transform = worldTextInstance.m_gui.transform.Find("Text");
-            worldTextInstance.m_textMeshField = transform.GetComponent<TextMeshProUGUI>();
-            discoverTexts.Add(worldTextInstance);
-
-            worldTextInstance.m_textMeshField.color = Color.cyan;
-            worldTextInstance.m_textMeshField.fontSize = 20;
-            worldTextInstance.m_textMeshField.text = text;
-            worldTextInstance.m_timer = 0f;
-        }
-
-        private void UpdateDiscoverTexts(float dt)
-        {
-            Chat.WorldTextInstance worldTextInstance = null;
-            Camera mainCamera = Utils.GetMainCamera();
-            float textDuration = Chat.instance.m_worldTextTTL;
-
-            foreach (var discoverText in discoverTexts)
-            {
-                // update timer
-                discoverText.m_timer += dt;
-                if (discoverText.m_timer > textDuration && worldTextInstance == null)
-                    worldTextInstance = discoverText;
-
-                var playerPos = Player.m_localPlayer.GetTopPoint();
-
-                // update text position
-                discoverText.m_position.y += dt * 0.5f;
-
-                // update color (fade out)
-                float f = Mathf.Clamp01(discoverText.m_timer / textDuration);
-                Color color = discoverText.m_textMeshField.color;
-                color.a = 1f - Mathf.Pow(f, 3f);
-                discoverText.m_textMeshField.color = color;
-
-                Vector3 position = mainCamera.WorldToScreenPointScaled(discoverText.m_position);
-                if (position.x < 0f ||
-                    position.x > Screen.width ||
-                    position.y < 0f ||
-                    position.y > Screen.height ||
-                    position.z < 0f)
-                {
-                    discoverText.m_gui.SetActive(value: false);
-                    continue;
-                }
-
-                discoverText.m_gui.SetActive(value: true);
-                discoverText.m_gui.transform.position = position;
-            }
-
-            if (worldTextInstance != null)
-            {
-                UnityEngine.Object.Destroy(worldTextInstance.m_gui);
-                discoverTexts.Remove(worldTextInstance);
-            }
         }
     }
 }

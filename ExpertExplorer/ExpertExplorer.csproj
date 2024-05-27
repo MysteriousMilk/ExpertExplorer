@@ -93,6 +93,10 @@
     <Reference Include="BepInEx">
       <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="BepInEx, Version=5.4.22.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\BepInEx.dll</HintPath>
+    </Reference>
     <Reference Include="BepInEx.Harmony">
       <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\BepInEx.Harmony.dll</HintPath>
     </Reference>

@@ -49,6 +49,11 @@ namespace ExpertExplorer
             PinnedLocations[zone] = pinData.m_name;
         }
 
+        public void RemovePin(Vector2i zone)
+        {
+            PinnedLocations.Remove(zone);
+        }
+
         public void Save(Player player)
         {
             if (player == null)
