@@ -31,6 +31,9 @@ You can report issues with the mod at the github link below.\
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
 
 ## Changelog
+**v1.3.1 - Version Number Fix**\
+Fix issue where version number did not have the "patch" digit, causing issues validating against the server version
+
 **v1.3 - Dungeon Auto-Pinning Option**
 - Added Auto-pinning option for dungeon locations
 - Fixed issue where mod-tracked pins would not be removed from custom player data if the player removes the pin from the map

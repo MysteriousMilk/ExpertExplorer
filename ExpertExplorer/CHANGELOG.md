@@ -1,3 +1,7 @@
+### Version 1.3.1
+------
+- Version number fix
+
 ### Version 1.3
 ------
 - Added Auto-pinning option for dungeon locations

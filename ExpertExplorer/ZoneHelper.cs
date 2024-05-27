@@ -67,7 +67,9 @@ namespace ExpertExplorer
 
         private void RPC_RequestZoneData(long sender, int zoneX, int zoneY)
         {
+#if DEBUG
             Jotunn.Logger.LogInfo("Server - Zone Data Request Received.");
+#endif
             var zoneData = GetZoneData(new Vector2i(zoneX, zoneY));
 
             ZPackage packet = new ZPackage();
