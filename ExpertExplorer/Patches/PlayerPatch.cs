@@ -36,5 +36,20 @@ namespace ExpertExplorer.Patches
                 }
             }
         }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Player), "OnSpawned")]
+        private static void OnSpawned(ref Player __instance)
+        {
+            if (__instance.InIntro())
+                return;
+
+            if (__instance.m_firstSpawn)
+                return;
+
+            // make sure we get the zone info as soon as the player spawns
+            Vector2i zone = ZoneSystem.instance.GetZone(__instance.transform.position);
+            ZoneHelper.Instance.Client_RequestZoneData(zone);
+        }
     }
 }

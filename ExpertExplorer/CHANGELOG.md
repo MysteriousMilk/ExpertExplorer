@@ -1,3 +1,10 @@
+### Version 1.2
+------
+- Added names for Ashlands locations
+- Location text above minimap now displace the correct location when in an interior dungeon
+- Replaced in-world text with MessageHud messages when a location is discovered
+- Added ability to pin locations to the map with a hotkey
+
 ### Version 1.1.2
 ------
 - Fix issue where saved biome data would duplicate everytime the player entered a biome, thus driving up the player file size. Affected player files will fix themselves upon the next save after this update.

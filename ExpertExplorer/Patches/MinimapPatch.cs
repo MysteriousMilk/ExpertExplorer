@@ -44,6 +44,13 @@ namespace ExpertExplorer.Patches
         }
 
         [HarmonyPostfix]
+        [HarmonyPatch(typeof(Minimap), "RemovePin", new Type[] { typeof(Minimap.PinData) })]
+        private static void RemovePin(ref Minimap __instance, ref Minimap.PinData pin)
+        {
+            ExpertExplorer.OnPinRemoved(pin);
+        }
+
+        [HarmonyPostfix]
         [HarmonyPatch(typeof(Minimap), "UpdateBiome")]
         private static void UpdateBiome(ref Minimap __instance, ref Player player)
         {

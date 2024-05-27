@@ -12,6 +12,7 @@ namespace ExpertExplorer
     {
         public Dictionary<Vector2i, int> DiscoveredLocations = new Dictionary<Vector2i, int>();
         public List<int> DiscoveredBiomes = new List<int>();
+        public Dictionary<Vector2i, string> PinnedLocations = new Dictionary<Vector2i, string>();
 
         public bool IsZoneLocationAlreadyDiscovered(Vector2i zone)
         {
@@ -43,6 +44,11 @@ namespace ExpertExplorer
             Jotunn.Logger.LogInfo($"Discovered biome {biome}");
         }
 
+        public void FlagAsPinned(Vector2i zone, Minimap.PinData pinData)
+        {
+            PinnedLocations[zone] = pinData.m_name;
+        }
+
         public void Save(Player player)
         {
             if (player == null)
@@ -69,6 +75,16 @@ namespace ExpertExplorer
             foreach (int biomeIndex in  DiscoveredBiomes)
                 pkg.Write(biomeIndex);
             SaveValue(player, "ExpertExplorerDiscoveredBiomes", pkg.GetBase64());
+
+            // Save associated pins
+            pkg = new ZPackage();
+            pkg.Write(PinnedLocations.Count);
+            foreach (var kvp in PinnedLocations)
+            {
+                pkg.Write(kvp.Key);
+                pkg.Write(kvp.Value);
+            }
+            SaveValue(player, nameof(PinnedLocations), pkg.GetBase64());
         }
 
         public void Load(Player fromPlayer)
@@ -121,6 +137,23 @@ namespace ExpertExplorer
             // In case the user just loaded this mod, see if they've already discovered some biomes
             foreach (var biome in fromPlayer.m_knownBiome)
                 FlagAsDiscovered(biome);
+
+            // Load the Pinned Locations list
+            PinnedLocations.Clear();
+            if (LoadValue(fromPlayer, nameof(PinnedLocations), out var pinnedLocationData))
+            {
+                var pkg = new ZPackage(pinnedLocationData);
+                int count = pkg.ReadInt();
+                for (int i = 0; i < count; i++)
+                {
+                    Vector2i zone = pkg.ReadVector2i();
+                    PinnedLocations[zone] = pkg.ReadString();
+                }
+            }
+
+#if DEBUG
+            Jotunn.Logger.LogInfo($"Pinned Location Count - {PinnedLocations.Count}");
+#endif
         }
 
         private static void SaveValue(Player player, string key, string value)

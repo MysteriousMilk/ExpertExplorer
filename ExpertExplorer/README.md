@@ -1,5 +1,5 @@
 # Expert Explorer
-A Valheim mod that adds a new Exploration Skill to the game. Exploring and finding new points of interest will increase the skill. As the skill increases, so will the player's sight range (on the minimap.)
+A Valheim mod that adds a new Exploration Skill to the game. Exploring and finding new points of interest will increase the skill. As the skill increases, so will the player's sight range (on the minimap.) Discovered locations can be pinned to the map with a hotkey. Default hotkey is "P", but it can be changed in the config file.
 
 <table>
   <tr>
@@ -20,6 +20,7 @@ BepInEx is required for this mod. Assuming BepInEx is already installed, locate 
 - Dynamic sight range based on Exploration Skill
 - Common names for locations / points of interest
 - Minimap indication of current location
+- Pin discovered locations to the map with a hotkey
 #### Localization
 Localization is implemented and English localization is provided. I would love to expand to other languages in the future.
 
@@ -30,6 +31,12 @@ You can report issues with the mod at the github link below.\
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
 
 ## Changelog
+**v1.2 - UI Tweaks and Location Pinning**\
+- Added names for Ashlands locations
+- Location text above minimap now displace the correct location when in an interior dungeon
+- Replaced in-world text with MessageHud messages when a location is discovered
+- Added ability to pin locations to the map with a hotkey
+
 **v1.1.2 - Player Save Fix**\
 Fix issue where saved biome data would duplicate everytime the player entered a biome, thus driving up the player file size.
 

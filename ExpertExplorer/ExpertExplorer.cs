@@ -9,6 +9,10 @@ using Jotunn.Configs;
 using BepInEx.Configuration;
 using System.Collections.Generic;
 using TMPro;
+using System.Linq;
+using static ZoneSystem;
+using static MessageHud;
+using Jotunn;
 
 namespace ExpertExplorer
 {
@@ -19,7 +23,7 @@ namespace ExpertExplorer
     {
         public const string PluginGUID = "com.milkwyzard.ExpertExplorer";
         public const string PluginName = "ExpertExplorer";
-        public const string PluginVersion = "1.1.2";
+        public const string PluginVersion = "1.2";
         public const string SkillId = $"{PluginGUID}.Exploration";
         
         // Use this class to add your own localization to the game
@@ -42,6 +46,21 @@ namespace ExpertExplorer
 
         private static List<Chat.WorldTextInstance> discoverTexts = new List<Chat.WorldTextInstance>();
         private static Dictionary<Vector2i, ZoneData> zoneDataCache = new Dictionary<Vector2i, ZoneData>();
+        private static Dictionary<Vector2i, Sprite> locationSpriteMap = new Dictionary<Vector2i, Sprite>();
+        private static Dictionary<Vector2i, Minimap.PinData> locationPins = new Dictionary<Vector2i, Minimap.PinData>();
+
+        private static List<string> specialLocations = new List<string>()
+        {
+            "StartTemple",
+            "Eikthyrnir",
+            "Dragonqueen",
+            "GoblinKing",
+            "GDKing",
+            "Bonemass",
+            "Vendor_BlackForest",
+            "Hildir_camp",
+            "Mistlands_DvergrBossEntrance1"
+        };
 
         #region Config Variables
         /// <summary>
@@ -58,6 +77,11 @@ namespace ExpertExplorer
         /// Distance between the player and the bounds of a location required to mark the location as discovered.
         /// </summary>
         public static ConfigEntry<float> DiscoverDistance;
+
+        /// <summary>
+        /// Key used to pin a location to the minimap.
+        /// </summary>
+        public static ConfigEntry<KeyboardShortcut> PinKey;
         #endregion
 
         #region Public Variables
@@ -85,9 +109,10 @@ namespace ExpertExplorer
         private void Awake()
         {
             // Load config
-            SkillXpFactor = Config.Bind("General", "SkillXpFactor", 1.2f, "Factor applied to skill gain. Higher number means faster skill gain.");
+            SkillXpFactor = Config.Bind("General", "SkillXpFactor", 1.5f, "Factor applied to skill gain. Higher number means faster skill gain.");
             MaxExploreRadius = Config.Bind("Exploration", "MaxExploreRadius", 200f, "Max explore radius used when the Exploration Skill is at 100.");
             DiscoverDistance = Config.Bind("Exploration", "DiscoverDistance", 10f, "Distance between the player and the bounds of a location required to mark the location as discovered.");
+            PinKey = Config.Bind("Hotkeys", "Pin to Mini-Map Key", new KeyboardShortcut(KeyCode.P), "Hotkey used to add a pin to the mini-map when a new location is discovered.");
 
             AddLocalizations();
 
@@ -102,15 +127,7 @@ namespace ExpertExplorer
             ExplorationSkillType = SkillManager.Instance.AddSkill(explorerSkill);
 
             //ZoneHelper.Instance.RegisterRPC();
-            ZoneHelper.Instance.SetZoneDataAction = (zoneData) =>
-            {
-                if (currentZone == zoneData.ZoneId)
-                {
-                    // Update the client-side record of the zone information
-                    zoneDataCache[currentZone] = zoneData;
-                    currentZoneData = zoneData;
-                }
-            };
+            ZoneHelper.Instance.SetZoneDataAction = (zoneData) => SetZoneData(zoneData);
 
             Jotunn.Logger.LogInfo($"ExpertExplorer v{PluginVersion} loaded and patched.");
         }
@@ -123,14 +140,14 @@ namespace ExpertExplorer
                 { "skill_exploration", "Exploration" },
                 { "skill_exploration_desc", "Discovering new areas in the world will improve your sight range." },
                 { "location_StartTemple", "Sacrificial Stones" },
-                { "location_Eikthyrnir", "The Alter of Eikthyr, the Forsaken" },
+                { "location_Eikthyrnir", "Alter of Eikthyr, the Forsaken" },
                 { "location_Dragonqueen", "The Mount of Moder" },
-                { "location_Hildir_cave", "The Howling Caverns" },
-                { "location_Hildir_crypt", "The Smouldering Tombs" },
+                { "location_Hildir_cave", "Howling Caverns" },
+                { "location_Hildir_crypt", "Smouldering Tombs" },
                 { "location_Hildir_plainsfortress", "The Sealed Tower" },
-                { "location_GoblinKing", "The Stones of Yagluth, the Forsaken" },
-                { "location_GDKing", "The Temple of the Elder, the Forsaken" },
-                { "location_Bonemass", "The Grave of Bonemass, the Forsaken" },
+                { "location_GoblinKing", "Stones of Yagluth, the Forsaken" },
+                { "location_GDKing", "Temple of the Elder, the Forsaken" },
+                { "location_Bonemass", "Grave of Bonemass, the Forsaken" },
                 { "location_Vendor_BlackForest", "Haldor, the Trader" },
                 { "location_Hildir_camp", "Hildir's Camp" },
                 { "location_WoodHouse1", "Old Wooden Hut" },
@@ -243,6 +260,29 @@ namespace ExpertExplorer
                 { "location_TarPit3", "Tar Pit" },
                 { "location_WoodFarm1", "Abandoned Farm" },
                 { "location_WoodVillage1", "Abandoned Village" },
+                { "location_CharredFortress", "Charred Fortress" },
+                { "location_CharredStone_Spawner", "Charred Stones" },
+                { "location_CharredTowerRuins2", "Charred Tower Ruins" },
+                { "location_CharredTowerRuins3", "Grausten Tower Ruins" },
+                { "location_FortressRuins", "Fortress Ruins" },
+                { "location_LeviathanLava", "Flametal Vein" },
+                { "location_SulfurArch", "Sulfur Arch" },
+                { "location_AshlandRuins", "Ash Ruins" },
+                { "location_CharredRuins2", "Ruined Charred Fortress" },
+                { "location_CharredRuins3", "Ruined Charred Tower" },
+                { "location_CharredRuins4", "Charred Fortress Ruins" },
+                { "location_VoltureNest", "Volture Nest" },
+                { "location_FaderLocation", "Fortress of Fader, the Forsaken" },
+                { "location_MorgenHole1", "Morgen Hole" },
+                { "location_MorgenHole2", "Morgen Hole" },
+                { "location_MorgenHole3", "Morgen Hole" },
+                { "location_PlaceofMystery1", "Mysterious Ruins" },
+                { "location_PlaceofMystery2", "Mysterious Ruins" },
+                { "location_PlaceofMystery3", "Mysterious Ruins" },
+                { "location_Runestone_Ashlands", "Ashlands Runestone" },
+                { "location_CharredTowerRuins1", "Charred Ruins" },
+                { "location_CharredTowerRuins1_dvergr", "Charred Ruins" },
+                { "location_CharredRuins1", "Ruined Charred Fortress" }
             });
         }
 
@@ -270,7 +310,7 @@ namespace ExpertExplorer
             }
 
             if (Player.m_localPlayer.InCutscene())
-                return;            
+                return;
 
             var playerPos = Player.m_localPlayer.transform.position;
             var explorationData = Player.m_localPlayer.ExplorationData();
@@ -294,28 +334,31 @@ namespace ExpertExplorer
             zoneCheckTimer = Mathf.Max(0.0f, zoneCheckTimer - Time.deltaTime);
             zoneRpcRequestTimer = Mathf.Max(0.0f, zoneRpcRequestTimer - Time.deltaTime);
 
-            // check to see if the timer has elapsed
-            if (zoneCheckTimer == 0.0f)
+            if (!Player.m_localPlayer.InInterior())
             {
-                Vector2i zone = ZoneSystem.instance.GetZone(playerPos);
-
-                if (zone != currentZone)
+                // check to see if the timer has elapsed
+                if (zoneCheckTimer == 0.0f)
                 {
+                    Vector2i zone = ZoneSystem.instance.GetZone(playerPos);
+
+                    if (zone != currentZone)
+                    {
 #if DEBUG
-                    Jotunn.Logger.LogInfo($"Entering zone ({zone.x}, {zone.y})");
+                        Jotunn.Logger.LogInfo($"Entering zone ({zone.x}, {zone.y})");
 #endif
 
-                    currentZone = zone;
-                    zoneDataCache.TryGetValue(currentZone, out currentZoneData);
-                }
+                        currentZone = zone;
+                        zoneDataCache.TryGetValue(currentZone, out currentZoneData);
+                    }
 
-                if (currentZoneData == null && zoneRpcRequestTimer == 0f)
-                {
-                    zoneRpcRequestTimer = ZONE_RPC_REQUEST_FREQUENCY;
-                    ZoneHelper.Instance.Client_RequestZoneData(currentZone);
-                }
+                    if (currentZoneData == null && zoneRpcRequestTimer == 0f)
+                    {
+                        zoneRpcRequestTimer = ZONE_RPC_REQUEST_FREQUENCY;
+                        ZoneHelper.Instance.Client_RequestZoneData(currentZone);
+                    }
 
-                zoneCheckTimer = ZONE_CHECK_FREQUENCY;
+                    zoneCheckTimer = ZONE_CHECK_FREQUENCY;
+                }
             }
 
             if (currentZoneData != null && currentZoneData.IsValid() && !explorationData.IsZoneLocationAlreadyDiscovered(currentZone))
@@ -338,8 +381,40 @@ namespace ExpertExplorer
                         Vector3 textPos = currentZoneData.LocationPosition;
                         textPos.y = ZoneSystem.instance.GetGroundHeight(currentZoneData.LocationPosition) + Player.m_localPlayer.GetHeight();
 
-                        // add the text to the world
-                        AddDiscoverTextToWorld(text, textPos);
+                        Sprite icon = null;
+                        locationSpriteMap.TryGetValue(currentZone, out icon);
+
+                        if (icon == null)
+                            Jotunn.Logger.LogInfo($"No sprite icon for location {currentZoneData.LocationPrefab}");
+
+                        QueueFoundLocationMsg(icon, "Location Discovered", currentZoneData.LocalizedLocationName, IsSpecialLocation(currentZoneData.LocationPrefab));
+                    }
+                }
+            }
+
+            // check for key input
+            if (Player.m_localPlayer.TakeInput())
+            {
+                if (ZInput.GetKeyDown(PinKey.Value.MainKey))
+                {
+                    if (IsLookingAtLocation(Player.m_localPlayer, currentZoneData) ||
+                        IsInsideLocation(Player.m_localPlayer, currentZoneData))
+                    {
+                        Vector3 pinPos = currentZoneData.LocationPosition;
+                        string pinName = currentZoneData.LocalizedLocationName;
+
+                        if (!locationPins.ContainsKey(currentZone) &&
+                            !IsSpecialLocation(currentZoneData.LocationPrefab))
+                        {
+                            var pinData = Minimap.instance.AddPin(pinPos, Minimap.PinType.Icon3, pinName, true, false, 0L);
+                            locationPins[currentZone] = pinData;
+                            explorationData.FlagAsPinned(currentZone, pinData);
+                            Player.m_localPlayer.Message(MessageType.TopLeft, $"Location pinned to minimap.");
+
+#if DEBUG
+                            Jotunn.Logger.LogInfo("Pin Added.");
+#endif
+                        }
                     }
                 }
             }
@@ -357,13 +432,95 @@ namespace ExpertExplorer
         {
             if (currentZoneData != null && currentZoneData.IsValid())
             {
-                if (IsLookingAtLocation(player, currentZoneData) ||
+                if (player.InInterior() ||
+                    IsLookingAtLocation(player, currentZoneData) ||
                     IsInsideLocation(player, currentZoneData))
                 {
                     return currentZoneData;
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Check to see if a location is considered a "special" location. Aka, boss spawn or starting area, etc.
+        /// </summary>
+        /// <param name="locationPrefabName">Name of the location prefab.</param>
+        /// <returns>True if the location is considered "special", False if not.</returns>
+        public static bool IsSpecialLocation(string locationPrefabName)
+        {
+            return specialLocations.Contains(locationPrefabName);
+        }
+
+        /// <summary>
+        /// Called when a pin is removed from the minimap. This will check the removed pin was the 
+        /// pinned location from this zone. If so, update our list of tracked pins.
+        /// </summary>
+        /// <param name="pinData">The PinData of the pin that was just removed.</param>
+        public static void OnPinRemoved(Minimap.PinData pinData)
+        {
+#if DEBUG
+            Jotunn.Logger.LogInfo("Pin Removed.");
+#endif
+
+            var zone = ZoneSystem.instance.GetZone(pinData.m_pos);
+
+            if (locationPins.ContainsKey(zone) &&
+                locationPins[zone].m_name == pinData.m_name)
+            {
+                locationPins.Remove(zone);
+            }
+        }
+
+        /// <summary>
+        /// Called when the server responses with the data for the current zone.
+        /// This cache off the data for this zone and render an icon for the location.
+        /// </summary>
+        /// <param name="zoneData">The data for the current zone.</param>
+        private static void SetZoneData(ZoneData zoneData)
+        {
+            if (currentZone == zoneData.ZoneId)
+            {
+                // Update the client-side record of the zone information
+                zoneDataCache[currentZone] = zoneData;
+                currentZoneData = zoneData;
+
+                if (!locationSpriteMap.ContainsKey(currentZone))
+                {
+                    var zoneLocation = ZoneSystem.instance.m_locations.FirstOrDefault(l => l.m_prefabName == zoneData.LocationPrefab);
+                    if (zoneLocation != null)
+                    {
+                        GameObject exteriorPrefab = zoneLocation.m_prefab.Asset;
+                        Location location = exteriorPrefab.GetComponent<Location>();
+
+                        if (location && location.m_hasInterior)
+                        {
+                            var locationTransform = location.transform;
+                            for (int i = 0; i < locationTransform.childCount; i++)
+                            {
+                                var childTransform = locationTransform.GetChild(i);
+                                if (childTransform.name.ToLowerInvariant().Equals("exterior"))
+                                {
+                                    exteriorPrefab = childTransform.gameObject;
+                                    break;
+                                }
+                            }
+                        }
+
+                        var sprite = RenderManager.Instance.Render(new RenderManager.RenderRequest(exteriorPrefab)
+                        {
+                            Rotation = RenderManager.IsometricRotation,
+                            FieldOfView = 20f,
+                            DistanceMultiplier = 1.1f,
+                            Width = 256,
+                            Height = 256
+                        });
+
+                        if (sprite != null)
+                            locationSpriteMap[currentZone] = sprite;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -402,7 +559,27 @@ namespace ExpertExplorer
         /// <returns>True if the player is in the given location, false if not.</returns>
         private static bool IsInsideLocation(Player player, ZoneData zoneData)
         {
-            return Vector3.Distance(player.transform.position, currentZoneData.LocationPosition) < zoneData.LocationRadiusMax;
+            return Utils.DistanceXZ(player.transform.position, currentZoneData.LocationPosition) < zoneData.LocationRadiusMax;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="icon"></param>
+        /// <param name="topic"></param>
+        /// <param name="description"></param>
+        public void QueueFoundLocationMsg(Sprite icon, string topic, string description, bool isSpecialLocation)
+        {
+            string desc = description;
+            if (!isSpecialLocation)
+                desc += "\nPress [<color=yellow><b>P</b></color>] to add a pin";
+
+            UnlockMsg unlockMsg = new UnlockMsg();
+            unlockMsg.m_icon = icon;
+            unlockMsg.m_topic = topic;
+            unlockMsg.m_description = desc;
+            MessageHud.instance.m_unlockMsgQueue.Enqueue(unlockMsg);
+            MessageHud.instance.AddLog(topic + ": " + description);
         }
 
         private void AddDiscoverTextToWorld(string text, Vector3 pos)
