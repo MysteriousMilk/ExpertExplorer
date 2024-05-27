@@ -108,10 +108,12 @@ namespace ExpertExplorer
 
         private void Awake()
         {
+            ConfigurationManagerAttributes isAdminOnly = new ConfigurationManagerAttributes { IsAdminOnly = true };
+
             // Load config
-            SkillXpFactor = Config.Bind("General", "SkillXpFactor", 1.5f, "Factor applied to skill gain. Higher number means faster skill gain.");
-            MaxExploreRadius = Config.Bind("Exploration", "MaxExploreRadius", 200f, "Max explore radius used when the Exploration Skill is at 100.");
-            DiscoverDistance = Config.Bind("Exploration", "DiscoverDistance", 10f, "Distance between the player and the bounds of a location required to mark the location as discovered.");
+            SkillXpFactor = Config.Bind("General", "SkillXpFactor", 1.5f, new ConfigDescription("Factor applied to skill gain. Higher number means faster skill gain. Range 0-100.", new AcceptableValueRange<float>(0f, 100f), isAdminOnly));
+            MaxExploreRadius = Config.Bind("Exploration", "MaxExploreRadius", 200f, new ConfigDescription("Max explore radius used when the Exploration Skill is at 100. Range 100-300.", new AcceptableValueRange<float>(100f, 300f), isAdminOnly));
+            DiscoverDistance = Config.Bind("Exploration", "DiscoverDistance", 10f, new ConfigDescription("Distance between the player and the bounds of a location required to mark the location as discovered. Range 0-50.", new AcceptableValueRange<float>(0f, 50f), isAdminOnly));
             PinKey = Config.Bind("Hotkeys", "Pin to Mini-Map Key", new KeyboardShortcut(KeyCode.P), "Hotkey used to add a pin to the mini-map when a new location is discovered.");
 
             AddLocalizations();
@@ -174,15 +176,15 @@ namespace ExpertExplorer
                 { "location_ShipSetting01", "Ship Rocks" },
                 { "location_MountainGrave01", "Mountain Grave" },
                 { "location_Grave1", "Grave Stones" },
-                { "location_Crypt2", "Crypt" },
+                { "location_Crypt2", "Burial Chambers" },
                 { "location_Ruin1", "Forest Ruins" },
                 { "location_Ruin2", "Forest Tower" },
                 { "location_StoneHouse3", "Dilapidated Stone Hut" },
                 { "location_StoneHouse4", "Ruined Stone Hut" },
                 { "location_GoblinCamp2", "Fuling Camp" },
                 { "location_TrollCave02", "Forest Cave" },
-                { "location_Crypt3", "Burial Crypt" },
-                { "location_Crypt4", "Ancient Crypt" },
+                { "location_Crypt3", "Burial Chambers" },
+                { "location_Crypt4", "Burial Chambers" },
                 { "location_DrakeNest01", "Drake Nest" },
                 { "location_Mistlands_RockSpire1", "Rock Spire" },
                 { "location_Mistlands_StatueGroup1", "Ancient Pillars" },

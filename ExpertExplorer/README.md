@@ -36,6 +36,7 @@ Additionally, you can reach me in the [Valheim Modding Discord](https://discord.
 - Location text above minimap now displace the correct location when in an interior dungeon
 - Replaced in-world text with MessageHud messages when a location is discovered
 - Added ability to pin locations to the map with a hotkey
+- Server synced config variables
 
 **v1.1.2 - Player Save Fix**\
 Fix issue where saved biome data would duplicate everytime the player entered a biome, thus driving up the player file size.

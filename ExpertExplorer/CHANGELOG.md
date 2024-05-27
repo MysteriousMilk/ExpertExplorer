@@ -4,6 +4,7 @@
 - Location text above minimap now displace the correct location when in an interior dungeon
 - Replaced in-world text with MessageHud messages when a location is discovered
 - Added ability to pin locations to the map with a hotkey
+- Server synced config variables
 
 ### Version 1.1.2
 ------
