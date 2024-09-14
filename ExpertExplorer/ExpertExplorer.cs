@@ -21,7 +21,7 @@ namespace ExpertExplorer
     {
         public const string PluginGUID = "com.milkwyzard.ExpertExplorer";
         public const string PluginName = "ExpertExplorer";
-        public const string PluginVersion = "1.3.1";
+        public const string PluginVersion = "1.4";
         public const string SkillId = $"{PluginGUID}.Exploration";
         
         // Use this class to add your own localization to the game
@@ -94,18 +94,64 @@ namespace ExpertExplorer
         /// </summary>
         public static ConfigEntry<KeyboardShortcut> PinKey;
 
+        /// <summary>
+        /// Key used to pin a "point of interst" to the minimap.
+        /// </summary>
         public static ConfigEntry<KeyboardShortcut> PinPointOfInterest;
+
+        /// <summary>
+        /// Key used to pin a an ore location to the minimap.
+        /// </summary>
         public static ConfigEntry<KeyboardShortcut> PinOre;
+
+        /// <summary>
+        /// Key used to pin home or town location to the minimap.
+        /// </summary>
         public static ConfigEntry<KeyboardShortcut> PinHome;
+
+        /// <summary>
+        /// Key used to pin a camp location to the minimap.
+        /// </summary>
         public static ConfigEntry<KeyboardShortcut> PinCamp;
+
+        /// <summary>
+        /// Key used to pin a dungeon/crypt location to the minimap.
+        /// </summary>
         public static ConfigEntry<KeyboardShortcut> PinDungeon;
+
+        /// <summary>
+        /// Key used to pin a portal to the minimap.
+        /// </summary>
         public static ConfigEntry<KeyboardShortcut> PinPortal;
 
+        /// <summary>
+        /// Minimap text to associate with a "point of interest" quick-pin.
+        /// </summary>
         public static ConfigEntry<string> PinTextPointOfInterest;
+
+        /// <summary>
+        /// Minimap text to associate with a an ore location quick-pin.
+        /// </summary>
         public static ConfigEntry<string> PinTextOre;
+
+        /// <summary>
+        /// Minimap text to associate with a home/town quick-pin.
+        /// </summary>
         public static ConfigEntry<string> PinTextHome;
+
+        /// <summary>
+        /// Minimap text to associate with a camp location quick-pin.
+        /// </summary>
         public static ConfigEntry<string> PinTextCamp;
+
+        /// <summary>
+        /// Minimap text to associate with a dungeon/crypt quick-pin.
+        /// </summary>
         public static ConfigEntry<string> PinTextDungeon;
+
+        /// <summary>
+        /// Minimap text to associate with a portal quick-pin.
+        /// </summary>
         public static ConfigEntry<string> PinTextPortal;
 
         /// <summary>
@@ -113,6 +159,9 @@ namespace ExpertExplorer
         /// </summary>
         public static ConfigEntry<bool> AutoPinDungeonLocations;
 
+        /// <summary>
+        /// Flag taht can be used to show or hide the ingame message/ui received when discovering a location.
+        /// </summary>
         public static ConfigEntry<bool> ShowLocationDiscoveryNotification;
         #endregion
 
@@ -148,7 +197,7 @@ namespace ExpertExplorer
             DiscoverDistance = Config.Bind("Exploration", "DiscoverDistance", 10f, new ConfigDescription("Distance between the player and the bounds of a location required to mark the location as discovered. Range 0-50.", new AcceptableValueRange<float>(0f, 50f), isAdminOnly));
             PinKey = Config.Bind("Hotkeys", "Pin to Mini-Map Key", new KeyboardShortcut(KeyCode.P), "Hotkey used to add a pin to the mini-map when a new location is discovered.");
             AutoPinDungeonLocations = Config.Bind("General", "Auto-Pin Dungeon Locations", true, "Flag that can be set to have dungeons auto-pin to the map when discovered.");
-            ShowLocationDiscoveryNotification = Config.Bind("General", "Show Location Discovery Notification", true, "Flag that can be set toggle whether a ui notification occurs when a location is discovered.");
+            ShowLocationDiscoveryNotification = Config.Bind("General", "Show Location Discovery Notification", true, new ConfigDescription("Flag that can be set toggle whether a ui notification occurs when a location is discovered.", null, isAdminOnly));
 
             PinHome = Config.Bind("Hotkeys", "Pin Home Key", new KeyboardShortcut(KeyCode.Keypad0, KeyCode.RightControl), "Hotkey used to add a home/town pin to the mini-map.");
             PinPointOfInterest = Config.Bind("Hotkeys", "Pin Point of Interest Key", new KeyboardShortcut(KeyCode.Keypad1, KeyCode.RightControl), "Hotkey used to add a point of interest pin to the mini-map.");

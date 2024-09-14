@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\JotunnLib.2.20.0\build\JotunnLib.props" Condition="Exists('..\packages\JotunnLib.2.20.0\build\JotunnLib.props')" />
+  <Import Project="..\packages\JotunnLib.2.20.3\build\JotunnLib.props" Condition="Exists('..\packages\JotunnLib.2.20.3\build\JotunnLib.props')" />
   <Import Project="..\GameDir.targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -50,45 +50,11 @@
     <Reference Include="0Harmony, Version=2.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HarmonyX.2.9.0\lib\net45\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_valheim_publicized, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ValheimUnity\valheim\AuxiliaryFiles\GameAssemblies\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="assembly_googleanalytics_publicized, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ValheimUnity\valheim\AuxiliaryFiles\GameAssemblies\publicized_assemblies\assembly_googleanalytics_publicized.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="assembly_guiutils_publicized, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ValheimUnity\valheim\AuxiliaryFiles\GameAssemblies\publicized_assemblies\assembly_guiutils_publicized.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="assembly_lux_publicized, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ValheimUnity\valheim\AuxiliaryFiles\GameAssemblies\publicized_assemblies\assembly_lux_publicized.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="assembly_postprocessing_publicized, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ValheimUnity\valheim\AuxiliaryFiles\GameAssemblies\publicized_assemblies\assembly_postprocessing_publicized.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="assembly_simplemeshcombine_publicized, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ValheimUnity\valheim\AuxiliaryFiles\GameAssemblies\publicized_assemblies\assembly_simplemeshcombine_publicized.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="assembly_sunshafts_publicized, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ValheimUnity\valheim\AuxiliaryFiles\GameAssemblies\publicized_assemblies\assembly_sunshafts_publicized.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="assembly_utils_publicized, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="assembly_utils_publicized">
       <HintPath>..\..\..\ValheimUnity\valheim\AuxiliaryFiles\GameAssemblies\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
-      <Private>False</Private>
+    </Reference>
+    <Reference Include="assembly_valheim_publicized">
+      <HintPath>..\..\..\ValheimUnity\valheim\AuxiliaryFiles\GameAssemblies\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
       <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\BepInEx.dll</HintPath>
@@ -106,8 +72,8 @@
     <Reference Include="HarmonyXInterop">
       <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\HarmonyXInterop.dll</HintPath>
     </Reference>
-    <Reference Include="Jotunn, Version=2.20.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\JotunnLib.2.20.0\lib\net462\Jotunn.dll</HintPath>
+    <Reference Include="Jotunn, Version=2.20.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\JotunnLib.2.20.3\lib\net462\Jotunn.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Cecil.0.11.4\lib\net40\Mono.Cecil.dll</HintPath>
@@ -145,6 +111,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ValheimUnity\valheim\AuxiliaryFiles\GameAssemblies\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ValheimUnity\valheim\AuxiliaryFiles\GameAssemblies\UnityEngine.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Patches\ZNetPatch.cs" />
@@ -189,6 +163,6 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\JotunnLib.2.20.0\build\JotunnLib.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JotunnLib.2.20.0\build\JotunnLib.props'))" />
+    <Error Condition="!Exists('..\packages\JotunnLib.2.20.3\build\JotunnLib.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JotunnLib.2.20.3\build\JotunnLib.props'))" />
   </Target>
 </Project>
