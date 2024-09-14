@@ -8,11 +8,8 @@ using UnityEngine;
 using Jotunn.Configs;
 using BepInEx.Configuration;
 using System.Collections.Generic;
-using TMPro;
 using System.Linq;
-using static ZoneSystem;
 using static MessageHud;
-using Jotunn;
 using System.Collections;
 
 namespace ExpertExplorer
@@ -24,7 +21,7 @@ namespace ExpertExplorer
     {
         public const string PluginGUID = "com.milkwyzard.ExpertExplorer";
         public const string PluginName = "ExpertExplorer";
-        public const string PluginVersion = "1.3.1";
+        public const string PluginVersion = "1.4";
         public const string SkillId = $"{PluginGUID}.Exploration";
         
         // Use this class to add your own localization to the game
@@ -98,9 +95,74 @@ namespace ExpertExplorer
         public static ConfigEntry<KeyboardShortcut> PinKey;
 
         /// <summary>
+        /// Key used to pin a "point of interst" to the minimap.
+        /// </summary>
+        public static ConfigEntry<KeyboardShortcut> PinPointOfInterest;
+
+        /// <summary>
+        /// Key used to pin a an ore location to the minimap.
+        /// </summary>
+        public static ConfigEntry<KeyboardShortcut> PinOre;
+
+        /// <summary>
+        /// Key used to pin home or town location to the minimap.
+        /// </summary>
+        public static ConfigEntry<KeyboardShortcut> PinHome;
+
+        /// <summary>
+        /// Key used to pin a camp location to the minimap.
+        /// </summary>
+        public static ConfigEntry<KeyboardShortcut> PinCamp;
+
+        /// <summary>
+        /// Key used to pin a dungeon/crypt location to the minimap.
+        /// </summary>
+        public static ConfigEntry<KeyboardShortcut> PinDungeon;
+
+        /// <summary>
+        /// Key used to pin a portal to the minimap.
+        /// </summary>
+        public static ConfigEntry<KeyboardShortcut> PinPortal;
+
+        /// <summary>
+        /// Minimap text to associate with a "point of interest" quick-pin.
+        /// </summary>
+        public static ConfigEntry<string> PinTextPointOfInterest;
+
+        /// <summary>
+        /// Minimap text to associate with a an ore location quick-pin.
+        /// </summary>
+        public static ConfigEntry<string> PinTextOre;
+
+        /// <summary>
+        /// Minimap text to associate with a home/town quick-pin.
+        /// </summary>
+        public static ConfigEntry<string> PinTextHome;
+
+        /// <summary>
+        /// Minimap text to associate with a camp location quick-pin.
+        /// </summary>
+        public static ConfigEntry<string> PinTextCamp;
+
+        /// <summary>
+        /// Minimap text to associate with a dungeon/crypt quick-pin.
+        /// </summary>
+        public static ConfigEntry<string> PinTextDungeon;
+
+        /// <summary>
+        /// Minimap text to associate with a portal quick-pin.
+        /// </summary>
+        public static ConfigEntry<string> PinTextPortal;
+
+        /// <summary>
         /// Flag that can be set to have dungeons auto-pin to the map when discovered.
         /// </summary>
         public static ConfigEntry<bool> AutoPinDungeonLocations;
+
+        /// <summary>
+        /// Flag taht can be used to show or hide the ingame message/ui received when discovering a location.
+        /// </summary>
+        public static ConfigEntry<bool> ShowLocationDiscoveryNotification;
         #endregion
 
         #region Public Variables
@@ -135,6 +197,21 @@ namespace ExpertExplorer
             DiscoverDistance = Config.Bind("Exploration", "DiscoverDistance", 10f, new ConfigDescription("Distance between the player and the bounds of a location required to mark the location as discovered. Range 0-50.", new AcceptableValueRange<float>(0f, 50f), isAdminOnly));
             PinKey = Config.Bind("Hotkeys", "Pin to Mini-Map Key", new KeyboardShortcut(KeyCode.P), "Hotkey used to add a pin to the mini-map when a new location is discovered.");
             AutoPinDungeonLocations = Config.Bind("General", "Auto-Pin Dungeon Locations", true, "Flag that can be set to have dungeons auto-pin to the map when discovered.");
+            ShowLocationDiscoveryNotification = Config.Bind("General", "Show Location Discovery Notification", true, new ConfigDescription("Flag that can be set toggle whether a ui notification occurs when a location is discovered.", null, isAdminOnly));
+
+            PinHome = Config.Bind("Hotkeys", "Pin Home Key", new KeyboardShortcut(KeyCode.Keypad0, KeyCode.RightControl), "Hotkey used to add a home/town pin to the mini-map.");
+            PinPointOfInterest = Config.Bind("Hotkeys", "Pin Point of Interest Key", new KeyboardShortcut(KeyCode.Keypad1, KeyCode.RightControl), "Hotkey used to add a point of interest pin to the mini-map.");
+            PinOre = Config.Bind("Hotkeys", "Pin Ore Key", new KeyboardShortcut(KeyCode.Keypad2, KeyCode.RightControl), "Hotkey used to add an ore deposit pin to the mini-map.");
+            PinCamp = Config.Bind("Hotkeys", "Pin Camp Key", new KeyboardShortcut(KeyCode.Keypad3, KeyCode.RightControl), "Hotkey used to add a camp pin to the mini-map.");
+            PinDungeon = Config.Bind("Hotkeys", "Pin Dungeon Key", new KeyboardShortcut(KeyCode.Keypad4, KeyCode.RightControl), "Hotkey used to add a dungeon pin to the mini-map.");
+            PinPortal = Config.Bind("Hotkeys", "Pin Portal Key", new KeyboardShortcut(KeyCode.Keypad5, KeyCode.RightControl), "Hotkey used to add a portal pin to the mini-map.");
+
+            PinTextHome = Config.Bind("Map Pin Text", "Pin Text Home", "Home or Town", "Text displayed when pinning a home location to the minimap with the keyboard shortcut.");
+            PinTextPointOfInterest = Config.Bind("Map Pin Text", "Pin Text Point of Interest", "Point of Interest", "Text displayed when pinning a point of interest to the minimap with the keyboard shortcut.");
+            PinTextOre = Config.Bind("Map Pin Text", "Pin Text Ore", "Ore Deposit", "Text displayed when pinning an ore deposit location to the minimap with the keyboard shortcut.");
+            PinTextCamp = Config.Bind("Map Pin Text", "Pin Text Camp", "Camp", "Text displayed when pinning a camp location to the minimap with the keyboard shortcut.");
+            PinTextDungeon = Config.Bind("Map Pin Text", "Pin Text Dungeon", "Crypt or Dungeon", "Text displayed when pinning a dungeon location to the minimap with the keyboard shortcut.");
+            PinTextPortal = Config.Bind("Map Pin Text", "Pin Text Portal", "Portal", "Text displayed when pinning a portal to the minimap with the keyboard shortcut.");
 
             AddLocalizations();
 
@@ -409,7 +486,8 @@ namespace ExpertExplorer
                         if (icon == null)
                             Jotunn.Logger.LogInfo($"No sprite icon for location {currentZoneData.LocationPrefab}");
 
-                        QueueFoundLocationMsg(icon, "Location Discovered", currentZoneData.LocalizedLocationName, IsSpecialLocation(currentZoneData.LocationPrefab));
+                        if (ShowLocationDiscoveryNotification.Value)
+                            QueueFoundLocationMsg(icon, "Location Discovered", currentZoneData.LocalizedLocationName, IsSpecialLocation(currentZoneData.LocationPrefab));
 
                         if (AutoPinDungeonLocations.Value &&
                             IsDungeonLocation(currentZoneData.LocationPrefab))
@@ -435,7 +513,62 @@ namespace ExpertExplorer
                         }
                     }
                 }
+
+                if (IsPinKeyPressed(PinHome.Value))
+                {
+                    Minimap.instance.AddPin(Player.m_localPlayer.transform.position, Minimap.PinType.Icon1, PinTextHome.Value, true, false, 0L);
+                    Player.m_localPlayer.Message(MessageType.TopLeft, $"{PinTextHome.Value} pinned to minimap.");
+                }
+
+                if (IsPinKeyPressed(PinPointOfInterest.Value))
+                {
+                    Minimap.instance.AddPin(Player.m_localPlayer.transform.position, Minimap.PinType.Icon3, PinTextPointOfInterest.Value, true, false, 0L);
+                    Player.m_localPlayer.Message(MessageType.TopLeft, $"{PinTextPointOfInterest.Value} pinned to minimap.");
+                }
+
+                if (IsPinKeyPressed(PinOre.Value))
+                {
+                    Minimap.instance.AddPin(Player.m_localPlayer.transform.position, Minimap.PinType.Icon2, PinTextOre.Value, true, false, 0L);
+                    Player.m_localPlayer.Message(MessageType.TopLeft, $"{PinTextOre.Value} pinned to minimap.");
+                }
+
+                if (IsPinKeyPressed(PinCamp.Value))
+                {
+                    Minimap.instance.AddPin(Player.m_localPlayer.transform.position, Minimap.PinType.Icon0, PinTextCamp.Value, true, false, 0L);
+                    Player.m_localPlayer.Message(MessageType.TopLeft, $"{PinTextCamp.Value} pinned to minimap.");
+                }
+
+                if (IsPinKeyPressed(PinDungeon.Value))
+                {
+                    Minimap.instance.AddPin(Player.m_localPlayer.transform.position, Minimap.PinType.Icon3, PinTextDungeon.Value, true, false, 0L);
+                    Player.m_localPlayer.Message(MessageType.TopLeft, $"{PinTextDungeon.Value} pinned to minimap.");
+                }
+
+                if (IsPinKeyPressed(PinPortal.Value))
+                {
+                    Minimap.instance.AddPin(Player.m_localPlayer.transform.position, Minimap.PinType.Icon4, PinTextPortal.Value, true, false, 0L);
+                    Player.m_localPlayer.Message(MessageType.TopLeft, $"{PinTextPortal.Value} pinned to minimap.");
+                }
             }
+        }
+
+        private bool IsPinKeyPressed(KeyboardShortcut pinKey)
+        {
+            if (!ZInput.GetKeyDown(pinKey.MainKey))
+                return false;
+
+            bool pressed = true;
+            foreach (var modKey in pinKey.Modifiers)
+            {
+                if (!ZInput.GetKey(modKey))
+                {
+                    pressed = false;
+                    Jotunn.Logger.LogInfo($"Missing key modifier {modKey}");
+                    break;
+                }    
+            }
+
+            return pressed;
         }
 
         /// <summary>

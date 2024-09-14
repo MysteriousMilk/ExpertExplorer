@@ -44,7 +44,7 @@ namespace ExpertExplorer.Patches
             if (__instance.InIntro())
                 return;
 
-            if (__instance.m_firstSpawn)
+            if (Game.instance.m_firstSpawn)
                 return;
 
             // make sure we get the zone info as soon as the player spawns

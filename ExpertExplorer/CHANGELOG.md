@@ -1,3 +1,16 @@
+### Version 1.4
+------
+- Update to latest valheim version (0.218.21)
+- Added several hotkeys for auto-pinning general pins to the minimap
+  - Pin Home Icon (default RightCtrl + Numpad0)
+  - Pin Point of Interest Icon (default RightCtrl + Numpad1)
+  - Pin Ore Icon (default RightCtrl + Numpad2)
+  - Pin Camp Icon (default RightCtrl + Numpad3)
+  - Pin Dungeon Icon (default RightCtrl + Numpad4)
+  - Pin Portal Icon (default RightCtrl + Numpad5)
+- Additional Configuration Settings to toggle off mod related UI notifications
+
+
 ### Version 1.3.1
 ------
 - Version number fix
