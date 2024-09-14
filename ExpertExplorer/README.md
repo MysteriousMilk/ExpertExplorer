@@ -31,6 +31,17 @@ You can report issues with the mod at the github link below.\
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
 
 ## Changelog
+**v1.4 - Auto-Pinning**
+- Update to latest valheim version (0.218.21)
+- Added several hotkeys for auto-pinning general pins to the minimap
+  - Pin Home Icon (default RightCtrl + Numpad0)
+  - Pin Point of Interest Icon (default RightCtrl + Numpad1)
+  - Pin Ore Icon (default RightCtrl + Numpad2)
+  - Pin Camp Icon (default RightCtrl + Numpad3)
+  - Pin Dungeon Icon (default RightCtrl + Numpad4)
+  - Pin Portal Icon (default RightCtrl + Numpad5)
+- Additional Configuration Settings to toggle off mod related UI notifications
+
 **v1.3.1 - Version Number Fix**\
 Fix issue where version number did not have the "patch" digit, causing issues validating against the server version
 
