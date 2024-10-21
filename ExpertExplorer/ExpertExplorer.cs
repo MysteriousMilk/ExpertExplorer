@@ -21,7 +21,7 @@ namespace ExpertExplorer
     {
         public const string PluginGUID = "com.milkwyzard.ExpertExplorer";
         public const string PluginName = "ExpertExplorer";
-        public const string PluginVersion = "1.4";
+        public const string PluginVersion = "1.4.1";
         public const string SkillId = $"{PluginGUID}.Exploration";
         
         // Use this class to add your own localization to the game
@@ -213,8 +213,6 @@ namespace ExpertExplorer
             PinTextDungeon = Config.Bind("Map Pin Text", "Pin Text Dungeon", "Crypt or Dungeon", "Text displayed when pinning a dungeon location to the minimap with the keyboard shortcut.");
             PinTextPortal = Config.Bind("Map Pin Text", "Pin Text Portal", "Portal", "Text displayed when pinning a portal to the minimap with the keyboard shortcut.");
 
-            AddLocalizations();
-
             ZoneManager.OnVanillaLocationsAvailable += OnVanillaLocationAvailable;
 
             // Add the Exploration Skill
@@ -225,164 +223,9 @@ namespace ExpertExplorer
             explorerSkill.IncreaseStep = SkillXpFactor.Value;
             ExplorationSkillType = SkillManager.Instance.AddSkill(explorerSkill);
 
-            //ZoneHelper.Instance.RegisterRPC();
             ZoneHelper.Instance.SetZoneDataAction = (zoneData) => SetZoneData(zoneData);
 
             Jotunn.Logger.LogInfo($"ExpertExplorer v{PluginVersion} loaded and patched.");
-        }
-
-        private void AddLocalizations()
-        {
-            // Add translations for our custom skill
-            Localization.AddTranslation("English", new Dictionary<string, string>
-            {
-                { "skill_exploration", "Exploration" },
-                { "skill_exploration_desc", "Discovering new areas in the world will improve your sight range." },
-                { "location_StartTemple", "Sacrificial Stones" },
-                { "location_Eikthyrnir", "Alter of Eikthyr, the Forsaken" },
-                { "location_Dragonqueen", "The Mount of Moder" },
-                { "location_Hildir_cave", "Howling Caverns" },
-                { "location_Hildir_crypt", "Smouldering Tombs" },
-                { "location_Hildir_plainsfortress", "The Sealed Tower" },
-                { "location_GoblinKing", "Stones of Yagluth, the Forsaken" },
-                { "location_GDKing", "Temple of the Elder, the Forsaken" },
-                { "location_Bonemass", "Grave of Bonemass, the Forsaken" },
-                { "location_Vendor_BlackForest", "Haldor, the Trader" },
-                { "location_Hildir_camp", "Hildir's Camp" },
-                { "location_WoodHouse1", "Old Wooden Hut" },
-                { "location_WoodHouse2", "Abandoned Wooden Hut" },
-                { "location_WoodHouse3", "Abandoned Camp" },
-                { "location_WoodHouse4", "Wooden Ruins" },
-                { "location_WoodHouse5", "Old Wooden House" },
-                { "location_WoodHouse6", "Old Wooden Tower" },
-                { "location_WoodHouse7", "Rundown Wooden Hut" },
-                { "location_WoodHouse8", "Abandoned Farm" },
-                { "location_WoodHouse9", "Old Hut" },
-                { "location_WoodHouse10", "Ruined Wooden Hut" },
-                { "location_WoodHouse11", "Old Wood House" },
-                { "location_WoodHouse12", "Old Wood Tower" },
-                { "location_WoodHouse13", "Ruined Wood House" },
-                { "location_StoneCircle", "Circle of Stones" },
-                { "location_SwampWell1", "Swamp Well" },
-                { "location_MountainWell1", "Mountain Well" },
-                { "location_Dolmen03", "Tomb" },
-                { "location_Waymarker01", "Waymarker" },
-                { "location_Waymarker02", "Waymarker" },
-                { "location_Dolmen01", "Dolmen" },
-                { "location_Dolmen02", "Dolmen" },
-                { "location_ShipSetting01", "Ship Rocks" },
-                { "location_MountainGrave01", "Mountain Grave" },
-                { "location_Grave1", "Grave Stones" },
-                { "location_Crypt2", "Burial Chambers" },
-                { "location_Ruin1", "Forest Ruins" },
-                { "location_Ruin2", "Forest Tower" },
-                { "location_StoneHouse3", "Dilapidated Stone Hut" },
-                { "location_StoneHouse4", "Ruined Stone Hut" },
-                { "location_GoblinCamp2", "Fuling Camp" },
-                { "location_TrollCave02", "Forest Cave" },
-                { "location_Crypt3", "Burial Chambers" },
-                { "location_Crypt4", "Burial Chambers" },
-                { "location_DrakeNest01", "Drake Nest" },
-                { "location_Mistlands_RockSpire1", "Rock Spire" },
-                { "location_Mistlands_StatueGroup1", "Ancient Pillars" },
-                { "location_Mistlands_Statue1", "Ruined Pillar" },
-                { "location_Mistlands_Statue2", "Ruined Pillar" },
-                { "location_Greydwarf_camp1", "Greydwarf Camp" },
-                { "location_Mistlands_RoadPost1", "Dvergr Road Post" },
-                { "location_InfestedTree01", "Infested Tree" },
-                { "location_AbandonedLogCabin02", "Ruined Cabin" },
-                { "location_AbandonedLogCabin03", "Abandoned Cabin" },
-                { "location_AbandonedLogCabin04", "Old Mountain Hut" },
-                { "location_Mistlands_GuardTower1_ruined_new2", "Ruined Guard Tower" },
-                { "location_Mistlands_GuardTower3_new", "Dvergr Guard Tower" },
-                { "location_Mistlands_GuardTower3_ruined_new", "Ruined Dvergr Guard Tower" },
-                { "location_Mistlands_GuardTower1_new", "Dvergr Guard Tower" },
-                { "location_Mistlands_GuardTower2_new", "Dvergr Guard Tower" },
-                { "location_Mistlands_GuardTower1_ruined_new", "Ruined Dvergr Guard Tower" },
-                { "location_Mistlands_Lighthouse1_new", "Dvergr Lighthouse" },
-                { "location_Mistlands_DvergrBossEntrance1", "Lair of the Queen" },
-                { "location_Mistlands_DvergrTownEntrance1", "Ruined Dvergr Mines" },
-                { "location_Mistlands_DvergrTownEntrance2", "Infested Mines" },
-                { "location_Mistlands_Excavation1", "Excavation Site" },
-                { "location_Mistlands_Excavation2", "Excavation Site" },
-                { "location_Mistlands_Excavation3", "Excavation Site" },
-                { "location_FireHole", "Surtling Geyser" },
-                { "location_Mistlands_Giant2", "Acient Jotun Remains" },
-                { "location_Mistlands_Giant1", "Fallen Jotun" },
-                { "location_Mistlands_Swords1", "Ancient Jotun Greatsword" },
-                { "location_Mistlands_Swords2", "Ancient Jotun Equipment" },
-                { "location_Mistlands_Swords3", "Foregone Jotun Greatsword" },
-                { "location_Ruin3", "Primordial Stone Ruins" },
-                { "location_StoneTower1", "Fuling Stone Ruins" },
-                { "location_StoneTower3", "Fuling Stone Tower" },
-                { "location_Mistlands_Harbour1", "Dvergr Harbour" },
-                { "location_Mistlands_Viaduct1", "Dvergr Bridge" },
-                { "location_Mistlands_Viaduct2", "Ruined Dvergr Bridge" },
-                { "location_MountainCave02", "Mountain Cave" },
-                { "location_StoneTowerRuins04", "Ancient Stone Tower" },
-                { "location_StoneTowerRuins05", "Ancient Mountain Fortress" },
-                { "location_Runestone_Greydwarfs", "Greydwarf Runestone" },
-                { "location_Runestone_Draugr", "Draugr Runestone" },
-                { "location_DrakeLorestone", "Drake Runestone" },
-                { "location_Runestone_Boars", "Boar Runestone" },
-                { "location_Runestone_BlackForest", "Black Forest Runestone" },
-                { "location_Runestone_Mistlands", "Mistlands Runestone" },
-                { "location_Runestone_Meadows", "Meadows Runestone" },
-                { "location_Runestone_Swamps", "Swamp Runestone" },
-                { "location_Runestone_Mountains", "Mountain Runestone" },
-                { "location_Runestone_Plains", "Plains Runestone" },
-                { "location_ShipWreck01", "Shipwreck" },
-                { "location_ShipWreck02", "Capsized Ship" },
-                { "location_ShipWreck03", "Capsized Ship" },
-                { "location_ShipWreck04", "Shipwreck" },
-                { "location_StoneHenge1", "Stonehenge" },
-                { "location_StoneHenge2", "Ancient Stones" },
-                { "location_StoneHenge3", "Waystones" },
-                { "location_StoneHenge4", "Burial Stones" },
-                { "location_StoneHenge5", "Stone Waymarker" },
-                { "location_StoneHenge6", "Ancient Stone Burial Site" },
-                { "location_StoneTowerRuins03", "Ruined Stone Tower" },
-                { "location_StoneTowerRuins07", "Black Forest Tower" },
-                { "location_StoneTowerRuins08", "Ancient Stone Tower" },
-                { "location_StoneTowerRuins09", "Stone Tower" },
-                { "location_StoneTowerRuins10", "Old Stone Tower" },
-                { "location_SunkenCrypt4", "Sunken Crypt" },
-                { "location_SwampHut5", "Swamp Ruins" },
-                { "location_SwampHut1", "Haunted Swamp Hut" },
-                { "location_SwampHut2", "Primeval Swamp Hut" },
-                { "location_SwampHut3", "Haunted Swamp Dock" },
-                { "location_SwampHut4", "Draugr Dock" },
-                { "location_SwampRuin1", "Ruined Draugr Tower" },
-                { "location_SwampRuin2", "Ancient Draugr Tower" },
-                { "location_TarPit1", "Tar Pit" },
-                { "location_TarPit2", "Tar Pit" },
-                { "location_TarPit3", "Tar Pit" },
-                { "location_WoodFarm1", "Abandoned Farm" },
-                { "location_WoodVillage1", "Abandoned Village" },
-                { "location_CharredFortress", "Charred Fortress" },
-                { "location_CharredStone_Spawner", "Charred Stones" },
-                { "location_CharredTowerRuins2", "Charred Tower Ruins" },
-                { "location_CharredTowerRuins3", "Grausten Tower Ruins" },
-                { "location_FortressRuins", "Fortress Ruins" },
-                { "location_LeviathanLava", "Flametal Vein" },
-                { "location_SulfurArch", "Sulfur Arch" },
-                { "location_AshlandRuins", "Ash Ruins" },
-                { "location_CharredRuins2", "Ruined Charred Fortress" },
-                { "location_CharredRuins3", "Ruined Charred Tower" },
-                { "location_CharredRuins4", "Charred Fortress Ruins" },
-                { "location_VoltureNest", "Volture Nest" },
-                { "location_FaderLocation", "Fortress of Fader, the Forsaken" },
-                { "location_MorgenHole1", "Morgen Hole" },
-                { "location_MorgenHole2", "Morgen Hole" },
-                { "location_MorgenHole3", "Morgen Hole" },
-                { "location_PlaceofMystery1", "Mysterious Ruins" },
-                { "location_PlaceofMystery2", "Mysterious Ruins" },
-                { "location_PlaceofMystery3", "Mysterious Ruins" },
-                { "location_Runestone_Ashlands", "Ashlands Runestone" },
-                { "location_CharredTowerRuins1", "Charred Ruins" },
-                { "location_CharredTowerRuins1_dvergr", "Charred Ruins" },
-                { "location_CharredRuins1", "Ruined Charred Fortress" }
-            });
         }
 
         private void OnVanillaLocationAvailable()
@@ -658,7 +501,7 @@ namespace ExpertExplorer
         }
 
         /// <summary>
-        /// Called when the server responses with the data for the current zone.
+        /// Called when the server responds with the data for the current zone.
         /// This cache off the data for this zone and render an icon for the location.
         /// </summary>
         /// <param name="zoneData">The data for the current zone.</param>
