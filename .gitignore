@@ -376,3 +376,6 @@ Environment.props
 /ExpertExplorer/Package/ExpertExplorer.dll
 /ExpertExplorer/Package/CHANGELOG.md
 /ExpertExplorer/Package/README.md
+/ExportExplorer/Package/Assets/
+/ExpertExplorer/Package/Assets/Translations/English/locations.json
+/ExpertExplorer/Package/Assets/Translations/English/skills.json
