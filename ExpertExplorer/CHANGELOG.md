@@ -1,3 +1,9 @@
+### Version 1.4.1
+------
+- Fix issue where version number didn't have the patch digit (again)
+- Updated to latest Jotunn framework
+- Plugin correctly reads localization string from a file now
+
 ### Version 1.4
 ------
 - Update to latest valheim version (0.218.21)

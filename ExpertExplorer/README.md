@@ -31,6 +31,11 @@ You can report issues with the mod at the github link below.\
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
 
 ## Changelog
+**v1.4.1 - Version and Localization Fix**
+- Fix issue where version number didn't have the patch digit (again)
+- Updated to latest Jotunn framework
+- Plugin correctly reads localization string from a file now
+
 **v1.4 - Auto-Pinning**
 - Update to latest valheim version (0.218.21)
 - Added several hotkeys for auto-pinning general pins to the minimap
