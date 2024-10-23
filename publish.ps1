@@ -48,10 +48,16 @@ if ($Target.Equals("Debug")) {
     }
     
     $plug = New-Item -Type Directory -Path "$DeployPath\$name" -Force
+	
     Write-Host "Copy $TargetAssembly to $plug"
     Copy-Item -Path "$TargetPath\$name.dll" -Destination "$plug" -Force
     Copy-Item -Path "$TargetPath\$name.pdb" -Destination "$plug" -Force
     Copy-Item -Path "$TargetPath\$name.dll.mdb" -Destination "$plug" -Force
+	Copy-Item -Path "$TargetPath\CHANGELOG.md" -Destination "$plug" -Force
+	Copy-Item -Path "$TargetPath\README.md" -Destination "$plug" -Force
+	Copy-Item -Path "$TargetPath\Package\icon.png" -Destination "$plug" -Force
+	Copy-Item -Path "$TargetPath\Package\manifest.json" -Destination "$plug" -Force
+	Copy-Item -Path "$TargetPath\Assets" -Destination "$plug" -Recurse -Force
 }
 
 if($Target.Equals("Release")) {
@@ -64,6 +70,7 @@ if($Target.Equals("Release")) {
     Copy-Item -Path "$TargetPath\$TargetAssembly" -Destination "$PackagePath\$TargetAssembly" -Force
     Copy-Item -Path "$ProjectPath\README.md" -Destination "$PackagePath\README.md" -Force
 	Copy-Item -Path "$ProjectPath\CHANGELOG.md" -Destination "$PackagePath\CHANGELOG.md" -Force
+	Copy-Item -Path "$ProjectPath\Assets" -Destination "$PackagePath" -Recurse -Force
     Compress-Archive -Path "$PackagePath\*" -DestinationPath "$TargetPath\$TargetAssembly.zip" -Force
 }
 
