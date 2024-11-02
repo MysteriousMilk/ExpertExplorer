@@ -281,7 +281,7 @@ namespace ExpertExplorer
                 // check to see if the timer has elapsed
                 if (zoneCheckTimer == 0.0f)
                 {
-                    Vector2i zone = ZoneSystem.instance.GetZone(playerPos);
+                    Vector2i zone = ZoneSystem.GetZone(playerPos);
 
                     if (zone != currentZone)
                     {
@@ -465,7 +465,7 @@ namespace ExpertExplorer
             Jotunn.Logger.LogInfo("Pin Removed.");
 #endif
 
-            var zone = ZoneSystem.instance.GetZone(pinData.m_pos);
+            var zone = ZoneSystem.GetZone(pinData.m_pos);
 
             if (locationPins.ContainsKey(zone) &&
                 locationPins[zone].m_name == pinData.m_name)
