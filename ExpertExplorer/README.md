@@ -33,6 +33,7 @@ Additionally, you can reach me in the [Valheim Modding Discord](https://discord.
 ## Changelog
 **v1.4.2 - Bog Witch Update**
 - Fix spawn issues introduced by the Bog Witch update
+- Add Bog Witch location to list of available locations
 
 **v1.4.1 - Version and Localization Fix**
 - Fix issue where version number didn't have the patch digit (again)
