@@ -31,6 +31,9 @@ You can report issues with the mod at the github link below.\
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
 
 ## Changelog
+**v1.4.2 - Bog Witch Update**
+- Fix spawn issues introduced by the Bog Witch update
+
 **v1.4.1 - Version and Localization Fix**
 - Fix issue where version number didn't have the patch digit (again)
 - Updated to latest Jotunn framework
