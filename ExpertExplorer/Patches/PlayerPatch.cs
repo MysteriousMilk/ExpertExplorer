@@ -48,7 +48,7 @@ namespace ExpertExplorer.Patches
                 return;
 
             // make sure we get the zone info as soon as the player spawns
-            Vector2i zone = ZoneSystem.instance.GetZone(__instance.transform.position);
+            Vector2i zone = ZoneSystem.GetZone(__instance.transform.position);
             ZoneHelper.Instance.Client_RequestZoneData(zone);
         }
     }

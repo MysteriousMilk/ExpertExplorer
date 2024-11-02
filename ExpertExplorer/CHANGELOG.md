@@ -1,3 +1,8 @@
+### Version 1.4.2
+------
+- Fix spawn issues introduced by the Bog Witch update
+- Add Bog Witch location to list of available locations
+
 ### Version 1.4.1
 ------
 - Fix issue where version number didn't have the patch digit (again)
