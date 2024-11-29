@@ -121,6 +121,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LocalizationHelper.cs" />
     <Compile Include="Patches\ZNetPatch.cs" />
     <Compile Include="Patches\MinimapPatch.cs" />
     <Compile Include="Patches\PlayerPatch.cs" />
@@ -134,8 +135,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Assets\Translations\English\locations.json" />
-    <None Include="Assets\Translations\English\skills.json" />
+    <None Include="Assets\Translations\English\Locations.English.json" />
+    <None Include="Assets\Translations\English\Skills.English.json" />
     <None Include="CHANGELOG.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
