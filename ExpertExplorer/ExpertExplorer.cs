@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using static MessageHud;
 using System.Collections;
+using System.IO;
+using System;
 
 namespace ExpertExplorer
 {
@@ -21,7 +23,7 @@ namespace ExpertExplorer
     {
         public const string PluginGUID = "com.milkwyzard.ExpertExplorer";
         public const string PluginName = "ExpertExplorer";
-        public const string PluginVersion = "1.4.2";
+        public const string PluginVersion = "1.4.3";
         public const string SkillId = $"{PluginGUID}.Exploration";
         
         // Use this class to add your own localization to the game
@@ -213,6 +215,7 @@ namespace ExpertExplorer
             PinTextDungeon = Config.Bind("Map Pin Text", "Pin Text Dungeon", "Crypt or Dungeon", "Text displayed when pinning a dungeon location to the minimap with the keyboard shortcut.");
             PinTextPortal = Config.Bind("Map Pin Text", "Pin Text Portal", "Portal", "Text displayed when pinning a portal to the minimap with the keyboard shortcut.");
 
+            LocalizationManager.OnLocalizationAdded += OnLocalizationsAdded;
             ZoneManager.OnVanillaLocationsAvailable += OnVanillaLocationAvailable;
 
             // Add the Exploration Skill
@@ -226,6 +229,11 @@ namespace ExpertExplorer
             ZoneHelper.Instance.SetZoneDataAction = (zoneData) => SetZoneData(zoneData);
 
             Jotunn.Logger.LogInfo($"ExpertExplorer v{PluginVersion} loaded and patched.");
+        }
+
+        private void OnLocalizationsAdded()
+        {
+            ResolveLocalizations();
         }
 
         private void OnVanillaLocationAvailable()
@@ -610,6 +618,52 @@ namespace ExpertExplorer
             unlockMsg.m_description = desc;
             MessageHud.instance.m_unlockMsgQueue.Enqueue(unlockMsg);
             MessageHud.instance.AddLog(topic + ": " + description);
+        }
+
+        private void ResolveLocalizations()
+        {
+            try
+            {
+                DirectoryInfo pluginDir = new DirectoryInfo(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                Dictionary<string, List<FileInfo>> languageFiles = new Dictionary<string, List<FileInfo>>();
+
+                foreach (var jsonFile in pluginDir.EnumerateFiles("*.json", SearchOption.TopDirectoryOnly))
+                {
+                    string[] nameTokens = jsonFile.Name.Split(new char[] { '.' }, System.StringSplitOptions.RemoveEmptyEntries);
+                    if (nameTokens.Length > 2 &&
+                        nameTokens.Last() == "json")
+                    {
+                        string lang = nameTokens[nameTokens.Length - 2].Trim();
+                        //Logger.LogInfo($"{jsonFile.Name} - {lang}");
+                        if (LocalizationHelper.IsLanguageSupported(lang))
+                        {
+                            if (!languageFiles.ContainsKey(lang))
+                                languageFiles.Add(lang, new List<FileInfo>());
+
+                            languageFiles[lang].Add(jsonFile);
+                        }
+                    }
+                }
+
+                foreach (var lang in  languageFiles.Keys)
+                {
+                    if (!Localization.GetLanguages().Contains(lang))
+                    {
+                        foreach (var jsonFile in languageFiles[lang])
+                        {
+                            Localization.AddJsonFile(lang, File.ReadAllText(jsonFile.FullName));
+                            Logger.LogInfo($"Added localization file [{jsonFile.Name}] from non-standard location.");
+                        }
+                    }
+                }
+
+                foreach (var lang in Localization.GetLanguages())
+                    Logger.LogInfo($"{lang} localization loaded and available.");
+            }
+            catch (Exception)
+            {
+                Logger.LogError("Error resolving localizations.");
+            }
         }
     }
 }
