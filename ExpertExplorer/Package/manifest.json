@@ -1,7 +1,7 @@
 ﻿{
     "name": "ExpertExplorer",
     "description": "Adds a new Exploration Skill to the game. Exploring and finding new points of interest will increase the skill. As the skill increases, so will the player's sight range (on the minimap.)",
-    "version_number": "1.4.2",
+    "version_number": "1.4.3",
     "website_url": "https://github.com/MysteriousMilk/ExpertExplorer",
     "dependencies": [
         "denikson-BepInExPack_Valheim-5.4.2202",

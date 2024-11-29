@@ -31,6 +31,9 @@ You can report issues with the mod at the github link below.\
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
 
 ## Changelog
+**v1.4.3 - Localization Fallback**
+- Add code to search root mod directory for localization files if they are not found in the typical location
+
 **v1.4.2 - Bog Witch Update**
 - Fix spawn issues introduced by the Bog Witch update
 - Add Bog Witch location to list of available locations

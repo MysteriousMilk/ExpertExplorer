@@ -1,3 +1,7 @@
+### Version 1.4.3
+------
+- Add code to search root mod directory for localization files if they are not found in the typical location
+
 ### Version 1.4.2
 ------
 - Fix spawn issues introduced by the Bog Witch update

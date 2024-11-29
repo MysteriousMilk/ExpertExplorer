@@ -23,7 +23,7 @@ namespace ExpertExplorer
     {
         public const string PluginGUID = "com.milkwyzard.ExpertExplorer";
         public const string PluginName = "ExpertExplorer";
-        public const string PluginVersion = "1.4.2";
+        public const string PluginVersion = "1.4.3";
         public const string SkillId = $"{PluginGUID}.Exploration";
         
         // Use this class to add your own localization to the game
