@@ -1,3 +1,7 @@
+### Version 1.4.4
+------
+- Added localization strings for the [More World Locations](https://thunderstore.io/c/valheim/p/warpalicious/) mods by [warpalicious](https://thunderstore.io/c/valheim/p/warpalicious/)
+
 ### Version 1.4.3
 ------
 - Add code to search root mod directory for localization files if they are not found in the typical location

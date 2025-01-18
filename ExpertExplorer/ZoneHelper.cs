@@ -46,6 +46,15 @@ namespace ExpertExplorer
                 data.IsPlaced = instance.m_placed;
                 data.LocalizedLocationName = instance.m_location != null ? GetLocationName(instance.m_location.m_prefabName) : string.Empty;
                 data.HasLocation = instance.m_location != null;
+
+#if DEBUG
+                if (instance.m_location != null &&
+                    instance.m_location.m_prefabName.StartsWith("MWL", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    data.LocalizedLocationName += " (MWL)";
+                }
+#endif
+
             }
 
             return data;

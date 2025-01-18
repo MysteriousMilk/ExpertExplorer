@@ -23,7 +23,7 @@ namespace ExpertExplorer
     {
         public const string PluginGUID = "com.milkwyzard.ExpertExplorer";
         public const string PluginName = "ExpertExplorer";
-        public const string PluginVersion = "1.4.3";
+        public const string PluginVersion = "1.4.4";
         public const string SkillId = $"{PluginGUID}.Exploration";
         
         // Use this class to add your own localization to the game
@@ -58,7 +58,14 @@ namespace ExpertExplorer
             "Bonemass",
             "Vendor_BlackForest",
             "Hildir_camp",
-            "Mistlands_DvergrBossEntrance1"
+            "Mistlands_DvergrBossEntrance1",
+            "MWL_PlainsTavern1",                // Extra vendor location from More World Locations (MWL) mod(s)
+            "MWL_PlainsCamp1",                  // Extra vendor location from More World Locations (MWL) mod(s)
+            "MWL_BlackForestBlacksmith1",       // Extra vendor location from More World Locations (MWL) mod(s)
+            "MWL_BlackForestBlacksmith2",       // Extra vendor location from More World Locations (MWL) mod(s)
+            "MWL_MountainsBlacksmith1",         // Extra vendor location from More World Locations (MWL) mod(s)
+            "MWL_MistlandsBlacksmith1",         // Extra vendor location from More World Locations (MWL) mod(s)
+            "MWL_OceanTavern1"                  // Extra vendor location from More World Locations (MWL) mod(s)
         };
 
         private static List<string> dungeonLocations = new List<string>()
@@ -72,7 +79,8 @@ namespace ExpertExplorer
             "Mistlands_DvergrTownEntrance1",
             "Mistlands_DvergrTownEntrance2",
             "MountainCave02",
-            "SunkenCrypt4"
+            "SunkenCrypt4",
+            "BFD_Exterior"                  // // Extra dungion location from Underground Ruins mod
         };
 
         #region Config Variables

@@ -136,6 +136,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Assets\Translations\English\Locations.English.json" />
+    <None Include="Assets\Translations\English\MWLLocations.English.json" />
     <None Include="Assets\Translations\English\Skills.English.json" />
     <None Include="CHANGELOG.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
