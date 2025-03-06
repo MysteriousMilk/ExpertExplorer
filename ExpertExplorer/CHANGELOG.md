@@ -1,3 +1,6 @@
+### Version 1.4.5
+- Recompile to make compatible with Valheim patch 0.220.3.
+
 ### Version 1.4.4
 ------
 - Added localization strings for the [More World Locations](https://thunderstore.io/c/valheim/p/warpalicious/) mods by [warpalicious](https://thunderstore.io/c/valheim/p/warpalicious/)
