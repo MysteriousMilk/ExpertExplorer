@@ -1,3 +1,6 @@
+### Version 1.4.6
+- Localization fixes.
+
 ### Version 1.4.5
 - Recompile to make compatible with Valheim patch 0.220.3.
 

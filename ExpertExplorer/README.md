@@ -31,6 +31,9 @@ You can report issues with the mod at the github link below.\
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
 
 ## Changelog
+**v1.4.6 - Localization Fixes**
+- Fix broken localization for location text.
+
 **v1.4.5 - Valheim Patch 0.220.3 Compatibility**
 - Recompile to make compatible with Valheim patch 0.220.3.
 

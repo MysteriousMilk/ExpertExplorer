@@ -62,7 +62,7 @@ namespace ExpertExplorer
 
         private string GetLocationName(string prefabName)
         {
-            return ExpertExplorer.Localization.TryTranslate($"location_{prefabName}");
+            return ExpertExplorer.Localization.TryTranslate($"$location_{prefabName}");
         }
 
         public void Client_RequestZoneData(Vector2i zone)
@@ -109,7 +109,7 @@ namespace ExpertExplorer
             zoneData.LocationRadiusMax = zoneDataPkg.ReadSingle();
             zoneData.IsPlaced = zoneDataPkg.ReadBool();
             zoneData.HasLocation = zoneDataPkg.ReadBool();
-            zoneData.LocalizedLocationName = string.IsNullOrEmpty(zoneData.LocationPrefab) == false ? ExpertExplorer.Localization.TryTranslate($"location_{zoneData.LocationPrefab}") : string.Empty;
+            zoneData.LocalizedLocationName = string.IsNullOrEmpty(zoneData.LocationPrefab) == false ? ExpertExplorer.Localization.TryTranslate($"$location_{zoneData.LocationPrefab}") : string.Empty;
 
 #if DEBUG
             Jotunn.Logger.LogInfo("Client - Received Zone Data. Invoking callback.");

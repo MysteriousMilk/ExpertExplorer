@@ -23,7 +23,7 @@ namespace ExpertExplorer
     {
         public const string PluginGUID = "com.milkwyzard.ExpertExplorer";
         public const string PluginName = "ExpertExplorer";
-        public const string PluginVersion = "1.4.5";
+        public const string PluginVersion = "1.4.6";
         public const string SkillId = $"{PluginGUID}.Exploration";
         
         // Use this class to add your own localization to the game
@@ -242,6 +242,7 @@ namespace ExpertExplorer
         private void OnLocalizationsAdded()
         {
             ResolveLocalizations();
+            //DebugTestLocalizations();
         }
 
         private void OnVanillaLocationAvailable()
@@ -672,6 +673,21 @@ namespace ExpertExplorer
             {
                 Logger.LogError("Error resolving localizations.");
             }
+        }
+
+        private void DebugTestLocalizations()
+        {
+            foreach (var lang in Localization.GetLanguages())
+            {
+                Logger.LogInfo($"---------------------------------------------------------------");
+                Logger.LogInfo($"Localizations for {lang}");
+                foreach (var translate in Localization.GetTranslations(lang))
+                    Logger.LogInfo($"\"{translate.Key}\": {translate.Value}");
+                Logger.LogInfo($"---------------------------------------------------------------");
+            }
+
+            string localStrTest = Localization.TryTranslate("$location_StartTemple");
+            Logger.LogInfo($"Localization Test: {localStrTest}");
         }
     }
 }
