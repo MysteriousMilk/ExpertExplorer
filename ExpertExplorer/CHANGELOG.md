@@ -1,7 +1,13 @@
+### Version 1.4.7
+------
+- Rebuild for Call to Arms update (0.221.4)
+
 ### Version 1.4.6
+------
 - Localization fixes.
 
 ### Version 1.4.5
+------
 - Recompile to make compatible with Valheim patch 0.220.3.
 
 ### Version 1.4.4
@@ -34,7 +40,6 @@
   - Pin Dungeon Icon (default RightCtrl + Numpad4)
   - Pin Portal Icon (default RightCtrl + Numpad5)
 - Additional Configuration Settings to toggle off mod related UI notifications
-
 
 ### Version 1.3.1
 ------
