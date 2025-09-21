@@ -15,8 +15,14 @@ namespace ExpertExplorer.Patches
         [HarmonyPatch(typeof(Minimap), "Explore", new Type[] { typeof(Vector3), typeof(float) })]
         private static void Explore(ref Minimap __instance, ref Vector3 p, ref float radius)
         {
-            float lerpFactor = Player.m_localPlayer.GetSkillLevel(ExpertExplorer.ExplorationSkillType) / 100f;
-            radius = Mathf.Lerp(__instance.m_exploreRadius, ExpertExplorer.MaxExploreRadius.Value, lerpFactor);
+            bool attachedToShip = Player.m_localPlayer.m_attached && Player.m_localPlayer.m_attachedToShip;
+            bool useSailingRadius = ExpertExplorer.PreferSailingModExploreRadius.Value;
+
+            if (!(ExpertExplorer.SailingModDetected && attachedToShip && useSailingRadius))
+            {
+                float lerpFactor = Player.m_localPlayer.GetSkillLevel(ExpertExplorer.ExplorationSkillType) / 100f;
+                radius = Mathf.Lerp(__instance.m_exploreRadius, ExpertExplorer.MaxExploreRadius.Value, lerpFactor);
+            }
         }
 
         [HarmonyPostfix]

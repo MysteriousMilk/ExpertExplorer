@@ -13,6 +13,7 @@ using static MessageHud;
 using System.Collections;
 using System.IO;
 using System;
+using BepInEx.Bootstrap;
 
 namespace ExpertExplorer
 {
@@ -173,6 +174,12 @@ namespace ExpertExplorer
         /// Flag taht can be used to show or hide the ingame message/ui received when discovering a location.
         /// </summary>
         public static ConfigEntry<bool> ShowLocationDiscoveryNotification;
+
+        /// <summary>
+        /// When the Sailing mod is present, this flag indicates that the sailing mod's explore
+        /// radius should be used when sailing instead of the radius from this mod. Only affects sailing.
+        /// </summary>
+        public static ConfigEntry<bool> PreferSailingModExploreRadius;
         #endregion
 
         #region Public Variables
@@ -181,6 +188,12 @@ namespace ExpertExplorer
         /// from the Valheim Skill registry.
         /// </summary>
         public static Skills.SkillType ExplorationSkillType;
+
+        /// <summary>
+        /// Flag that indicates if Smoothbrain's Sailing mod was detected or not.
+        /// https://thunderstore.io/c/valheim/p/Smoothbrain/Sailing/
+        /// </summary>
+        public static bool SailingModDetected = false;
         #endregion
 
         /// <summary>
@@ -223,6 +236,9 @@ namespace ExpertExplorer
             PinTextDungeon = Config.Bind("Map Pin Text", "Pin Text Dungeon", "Crypt or Dungeon", "Text displayed when pinning a dungeon location to the minimap with the keyboard shortcut.");
             PinTextPortal = Config.Bind("Map Pin Text", "Pin Text Portal", "Portal", "Text displayed when pinning a portal to the minimap with the keyboard shortcut.");
 
+            PreferSailingModExploreRadius = Config.Bind("Compatibility", "PreferSailingModExploreRadius", true,
+                new ConfigDescription("When the Sailing mod is present, this flag indicates that the sailing mod's explore radius should be used when sailing instead of the radius from this mod. Only affects sailing.", null, isAdminOnly));
+
             LocalizationManager.OnLocalizationAdded += OnLocalizationsAdded;
             ZoneManager.OnVanillaLocationsAvailable += OnVanillaLocationAvailable;
 
@@ -243,6 +259,20 @@ namespace ExpertExplorer
         {
             ResolveLocalizations();
             //DebugTestLocalizations();
+
+            // Check for Smoothbrain's sailing mod (which also increases sight radius while sailing)
+            // Set a flag if it is enabled, so we can add compatibilty.
+            // Odd to do it in localization, but this will ensure it happens once after the BepInEx Chainloader is finished.
+            var plugin = Chainloader.PluginInfos.Values.FirstOrDefault(p => p.Metadata.GUID == "org.bepinex.plugins.sailing");
+            if (plugin != null)
+            {
+                SailingModDetected = true;
+                Jotunn.Logger.LogWarning($"{plugin.Metadata.Name} mod detected. Using compatibility.");
+            }
+            else
+            {
+                SailingModDetected = false;
+            }
         }
 
         private void OnVanillaLocationAvailable()
