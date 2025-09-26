@@ -568,52 +568,55 @@ namespace ExpertExplorer
 
                 if (!locationSpriteMap.ContainsKey(currentZone))
                 {
-                    var zoneLocation = ZoneHelper.Instance.GetZoneLocation(zoneData.LocationPrefab);
-                    if (zoneLocation != null)
+                    if (!string.IsNullOrEmpty(zoneData.LocationPrefab))
                     {
-                        GameObject exteriorPrefab = zoneLocation.GetLocationAsset();
-                        Location location = exteriorPrefab?.GetComponent<Location>() ?? null;
-
-                        if (location != null && location.m_hasInterior)
+                        var zoneLocation = ZoneHelper.Instance.GetZoneLocation(zoneData.LocationPrefab);
+                        if (zoneLocation != null)
                         {
-                            var locationTransform = location.transform;
+                            GameObject exteriorPrefab = zoneLocation.GetLocationAsset();
+                            Location location = exteriorPrefab?.GetComponent<Location>() ?? null;
 
-                            if (locationTransform != null)
+                            if (location != null && location.m_hasInterior)
                             {
-                                for (int i = 0; i < locationTransform.childCount; i++)
+                                var locationTransform = location.transform;
+
+                                if (locationTransform != null)
                                 {
-                                    var childTransform = locationTransform.GetChild(i);
-                                    if (childTransform != null && childTransform.name.ToLowerInvariant().Equals("exterior"))
+                                    for (int i = 0; i < locationTransform.childCount; i++)
                                     {
-                                        exteriorPrefab = childTransform.gameObject;
-                                        break;
+                                        var childTransform = locationTransform.GetChild(i);
+                                        if (childTransform != null && childTransform.name.ToLowerInvariant().Equals("exterior"))
+                                        {
+                                            exteriorPrefab = childTransform.gameObject;
+                                            break;
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        if (exteriorPrefab != null)
-                        {
-                            var sprite = RenderManager.Instance.Render(new RenderManager.RenderRequest(exteriorPrefab)
+                            if (exteriorPrefab != null)
                             {
-                                Rotation = RenderManager.IsometricRotation,
-                                FieldOfView = 20f,
-                                DistanceMultiplier = 1.1f,
-                                Width = 256,
-                                Height = 256
-                            });
+                                var sprite = RenderManager.Instance.Render(new RenderManager.RenderRequest(exteriorPrefab)
+                                {
+                                    Rotation = RenderManager.IsometricRotation,
+                                    FieldOfView = 20f,
+                                    DistanceMultiplier = 1.1f,
+                                    Width = 256,
+                                    Height = 256
+                                });
 
-                            if (sprite != null)
-                                locationSpriteMap[currentZone] = sprite;
+                                if (sprite != null)
+                                    locationSpriteMap[currentZone] = sprite;
+                            }
+                            else
+                            {
+                                Jotunn.Logger.LogWarning($"No asset prefab found for location {zoneData.LocationPrefab}.");
+                            }
                         }
                         else
                         {
-                            Jotunn.Logger.LogWarning($"No asset prefab found for location {zoneData.LocationPrefab}.");
+                            Jotunn.Logger.LogWarning($"No zone location found for {zoneData.LocationPrefab}.");
                         }
-                    }
-                    else
-                    {
-                        Jotunn.Logger.LogWarning($"No zone location found for {zoneData.LocationPrefab}.");
                     }
                 }
             }
