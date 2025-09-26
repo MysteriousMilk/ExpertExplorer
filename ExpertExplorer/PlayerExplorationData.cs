@@ -34,14 +34,15 @@ namespace ExpertExplorer
 
         public void FlagAsDiscovered(Heightmap.Biome biome)
         {
-            int biomeIndex = Heightmap.s_biomeToIndex[biome];
+            if (Heightmap.s_biomeToIndex.TryGetValue(biome, out int biomeIndex))
+            {
+                if (DiscoveredBiomes.Contains(biomeIndex))
+                    return;
 
-            if (DiscoveredBiomes.Contains(biomeIndex))
-                return;
+                DiscoveredBiomes.Add(biomeIndex);
 
-            DiscoveredBiomes.Add(biomeIndex);
-
-            Jotunn.Logger.LogInfo($"Discovered biome {biome}");
+                Jotunn.Logger.LogInfo($"Discovered biome {biome}");
+            }
         }
 
         public void FlagAsPinned(Vector2i zone, Minimap.PinData pinData)
