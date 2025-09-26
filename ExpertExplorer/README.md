@@ -31,6 +31,11 @@ You can report issues with the mod at the github link below.\
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
 
 ## Changelog
+**v1.5 - Mod Compatibility and Bug Fixes**
+- Add compatibility with Smoothbrain's [Sailing Mod](https://thunderstore.io/c/valheim/p/Smoothbrain/Sailing/).
+- Attempt to fix issue with [More World Locations](https://thunderstore.io/c/valheim/p/warpalicious/) where the discovered location was causing a NullReferenceException.
+- Fix issue where trying to determine the biome index could sometimes cause a KeyNotFoundException.
+
 **v1.4.7 - Call to Arms**
 - Rebuild for Call to Arms update (0.221.4)
 

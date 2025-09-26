@@ -1,3 +1,9 @@
+### Version 1.5
+------
+- Add compatibility with Smoothbrain's [Sailing Mod](https://thunderstore.io/c/valheim/p/Smoothbrain/Sailing/).
+- Attempt to fix issue with [More World Locations](https://thunderstore.io/c/valheim/p/warpalicious/) where the discovered location was causing a NullReferenceException.
+- Fix issue where trying to determine the biome index could sometimes cause a KeyNotFoundException.
+
 ### Version 1.4.7
 ------
 - Rebuild for Call to Arms update (0.221.4)
