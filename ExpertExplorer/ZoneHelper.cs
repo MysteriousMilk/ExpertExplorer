@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 namespace ExpertExplorer
@@ -60,9 +61,23 @@ namespace ExpertExplorer
             return data;
         }
 
+        public ZoneSystem.ZoneLocation GetZoneLocation(string zonePrefabName)
+        {
+            if (string.IsNullOrEmpty(zonePrefabName))
+                return null;
+
+            if (ZoneSystem.instance == null)
+                return null;
+
+            if (ZoneSystem.instance.m_locations == null || ZoneSystem.instance.m_locations.Count == 0)
+                return null;
+
+            return ZoneSystem.instance.m_locations.FirstOrDefault(l => l.m_prefabName == zonePrefabName);
+        }
+
         private string GetLocationName(string prefabName)
         {
-            return ExpertExplorer.Localization.TryTranslate($"$location_{prefabName}");
+            return ExpertExplorer.TryTranslate($"$location_{prefabName}");
         }
 
         public void Client_RequestZoneData(Vector2i zone)
@@ -109,13 +124,29 @@ namespace ExpertExplorer
             zoneData.LocationRadiusMax = zoneDataPkg.ReadSingle();
             zoneData.IsPlaced = zoneDataPkg.ReadBool();
             zoneData.HasLocation = zoneDataPkg.ReadBool();
-            zoneData.LocalizedLocationName = string.IsNullOrEmpty(zoneData.LocationPrefab) == false ? ExpertExplorer.Localization.TryTranslate($"$location_{zoneData.LocationPrefab}") : string.Empty;
+
+            if (zoneData != null && zoneData.LocationPrefab != null)
+                zoneData.LocalizedLocationName = ExpertExplorer.TryTranslate($"$location_{zoneData.LocationPrefab}");
 
 #if DEBUG
             Jotunn.Logger.LogInfo("Client - Received Zone Data. Invoking callback.");
 #endif
 
             SetZoneDataAction?.Invoke(zoneData);
+        }
+    }
+
+    public static class ZoneLocationExtensions
+    {
+        public static GameObject GetLocationAsset(this ZoneSystem.ZoneLocation location)
+        {
+            if (location == null)
+                return null;
+
+            if (location.m_prefab == null)
+                return null;
+
+            return location.m_prefab.Asset;
         }
     }
 }

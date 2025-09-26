@@ -554,6 +554,12 @@ namespace ExpertExplorer
         /// <param name="zoneData">The data for the current zone.</param>
         private static void SetZoneData(ZoneData zoneData)
         {
+            if (zoneData == null)
+            {
+                Jotunn.Logger.LogWarning("SetZoneData called but ZoneData was null.");
+                return;
+            }
+
             if (currentZone == zoneData.ZoneId)
             {
                 // Update the client-side record of the zone information
@@ -562,37 +568,52 @@ namespace ExpertExplorer
 
                 if (!locationSpriteMap.ContainsKey(currentZone))
                 {
-                    var zoneLocation = ZoneSystem.instance.m_locations.FirstOrDefault(l => l.m_prefabName == zoneData.LocationPrefab);
+                    var zoneLocation = ZoneHelper.Instance.GetZoneLocation(zoneData.LocationPrefab);
                     if (zoneLocation != null)
                     {
-                        GameObject exteriorPrefab = zoneLocation.m_prefab.Asset;
-                        Location location = exteriorPrefab.GetComponent<Location>();
+                        GameObject exteriorPrefab = zoneLocation.GetLocationAsset();
+                        Location location = exteriorPrefab?.GetComponent<Location>() ?? null;
 
-                        if (location && location.m_hasInterior)
+                        if (location != null && location.m_hasInterior)
                         {
                             var locationTransform = location.transform;
-                            for (int i = 0; i < locationTransform.childCount; i++)
+
+                            if (locationTransform != null)
                             {
-                                var childTransform = locationTransform.GetChild(i);
-                                if (childTransform.name.ToLowerInvariant().Equals("exterior"))
+                                for (int i = 0; i < locationTransform.childCount; i++)
                                 {
-                                    exteriorPrefab = childTransform.gameObject;
-                                    break;
+                                    var childTransform = locationTransform.GetChild(i);
+                                    if (childTransform != null && childTransform.name.ToLowerInvariant().Equals("exterior"))
+                                    {
+                                        exteriorPrefab = childTransform.gameObject;
+                                        break;
+                                    }
                                 }
                             }
                         }
 
-                        var sprite = RenderManager.Instance.Render(new RenderManager.RenderRequest(exteriorPrefab)
+                        if (exteriorPrefab != null)
                         {
-                            Rotation = RenderManager.IsometricRotation,
-                            FieldOfView = 20f,
-                            DistanceMultiplier = 1.1f,
-                            Width = 256,
-                            Height = 256
-                        });
+                            var sprite = RenderManager.Instance.Render(new RenderManager.RenderRequest(exteriorPrefab)
+                            {
+                                Rotation = RenderManager.IsometricRotation,
+                                FieldOfView = 20f,
+                                DistanceMultiplier = 1.1f,
+                                Width = 256,
+                                Height = 256
+                            });
 
-                        if (sprite != null)
-                            locationSpriteMap[currentZone] = sprite;
+                            if (sprite != null)
+                                locationSpriteMap[currentZone] = sprite;
+                        }
+                        else
+                        {
+                            Jotunn.Logger.LogWarning($"No asset prefab found for location {zoneData.LocationPrefab}.");
+                        }
+                    }
+                    else
+                    {
+                        Jotunn.Logger.LogWarning($"No zone location found for {zoneData.LocationPrefab}.");
                     }
                 }
             }
@@ -659,6 +680,17 @@ namespace ExpertExplorer
             MessageHud.instance.AddLog(topic + ": " + description);
         }
 
+        /// <summary>
+        /// Wrapper around <see cref="CustomLocalization.TryTranslate(string)"/> to ensure it
+        /// is not null.
+        /// </summary>
+        /// <param name="word">The word to translate.</param>
+        /// <returns>The translated word, or the original word if <see cref="CustomLocalization"/> is null or localization verb not found.</returns>
+        public static string TryTranslate(string word)
+        {
+            return Localization?.TryTranslate(word) ?? word;
+        }
+
         private void ResolveLocalizations()
         {
             try
@@ -716,7 +748,7 @@ namespace ExpertExplorer
                 Logger.LogInfo($"---------------------------------------------------------------");
             }
 
-            string localStrTest = Localization.TryTranslate("$location_StartTemple");
+            string localStrTest = TryTranslate("$location_StartTemple");
             Logger.LogInfo($"Localization Test: {localStrTest}");
         }
     }
