@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\JotunnLib.2.26.1\build\JotunnLib.props" Condition="Exists('..\..\packages\JotunnLib.2.26.1\build\JotunnLib.props')" />
+  <Import Project="..\..\packages\JotunnLib.2.27.1\build\JotunnLib.props" Condition="Exists('..\..\packages\JotunnLib.2.27.1\build\JotunnLib.props')" />
   <Import Project="..\packages\JotunnLib.2.24.1\build\JotunnLib.props" Condition="Exists('..\packages\JotunnLib.2.24.1\build\JotunnLib.props')" />
   <Import Project="..\GameDir.targets" />
   <PropertyGroup>
@@ -98,23 +98,20 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\BepInEx.dll</HintPath>
-    </Reference>
-    <Reference Include="BepInEx, Version=5.4.22.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\BepInEx.dll</HintPath>
+      <HintPath>..\..\..\Tools\BepInEx\BepInExPack_Valheim\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.Harmony">
-      <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\BepInEx.Harmony.dll</HintPath>
+      <HintPath>..\..\..\Tools\BepInEx\BepInExPack_Valheim\BepInEx\core\BepInEx.Harmony.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.Preloader">
-      <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\BepInEx.Preloader.dll</HintPath>
+      <HintPath>..\..\..\Tools\BepInEx\BepInExPack_Valheim\BepInEx\core\BepInEx.Preloader.dll</HintPath>
     </Reference>
     <Reference Include="HarmonyXInterop">
-      <HintPath>..\..\..\Tools\denikson-BepInExPack_Valheim-5.4.2202\BepInExPack_Valheim\BepInEx\core\HarmonyXInterop.dll</HintPath>
+      <HintPath>..\..\..\Tools\BepInEx\BepInExPack_Valheim\BepInEx\core\HarmonyXInterop.dll</HintPath>
     </Reference>
-    <Reference Include="Jotunn, Version=2.26.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\JotunnLib.2.26.1\lib\net462\Jotunn.dll</HintPath>
+    <Reference Include="Jotunn, Version=2.27.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JotunnLib.2.27.1\lib\net462\Jotunn.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Cecil.0.11.4\lib\net40\Mono.Cecil.dll</HintPath>
@@ -136,10 +133,6 @@
     </Reference>
     <Reference Include="MonoMod.Utils, Version=22.1.29.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoMod.Utils.22.1.29.1\lib\net452\MonoMod.Utils.dll</HintPath>
-    </Reference>
-    <Reference Include="BepInEx">
-      <HintPath>$(GameDir)\BepInEx\core\BepInEx.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="SoftReferenceableAssets">
       <HintPath>..\..\..\ValheimUnity\valheim\AuxiliaryFiles\GameAssemblies\SoftReferenceableAssets.dll</HintPath>
@@ -222,6 +215,6 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\JotunnLib.2.24.1\build\JotunnLib.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JotunnLib.2.24.1\build\JotunnLib.props'))" />
-    <Error Condition="!Exists('..\..\packages\JotunnLib.2.26.1\build\JotunnLib.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JotunnLib.2.26.1\build\JotunnLib.props'))" />
+    <Error Condition="!Exists('..\..\packages\JotunnLib.2.27.1\build\JotunnLib.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JotunnLib.2.27.1\build\JotunnLib.props'))" />
   </Target>
 </Project>

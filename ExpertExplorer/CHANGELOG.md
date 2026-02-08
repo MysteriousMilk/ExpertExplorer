@@ -1,3 +1,8 @@
+### Version 1.6
+------
+- Rebuild for Valheim patch 0.221.10
+- Localization updates to support more locations within the [More World Locations](https://thunderstore.io/c/valheim/p/warpalicious/) mod.
+
 ### Version 1.5
 ------
 - Add compatibility with Smoothbrain's [Sailing Mod](https://thunderstore.io/c/valheim/p/Smoothbrain/Sailing/).

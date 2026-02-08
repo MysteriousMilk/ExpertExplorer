@@ -31,6 +31,10 @@ You can report issues with the mod at the github link below.\
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
 
 ## Changelog
+**v1.6 - Rebuild and Localization Updates**
+- Rebuild for Valheim patch 0.221.10
+- Localization updates to support more locations within the [More World Locations](https://thunderstore.io/c/valheim/p/warpalicious/) mod.
+
 **v1.5 - Mod Compatibility and Bug Fixes**
 - Add compatibility with Smoothbrain's [Sailing Mod](https://thunderstore.io/c/valheim/p/Smoothbrain/Sailing/).
 - Attempt to fix issue with [More World Locations](https://thunderstore.io/c/valheim/p/warpalicious/) where the discovered location was causing a NullReferenceException.
