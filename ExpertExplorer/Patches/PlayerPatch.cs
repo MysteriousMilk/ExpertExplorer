@@ -23,7 +23,7 @@ namespace ExpertExplorer.Patches
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(Player), "AddKnownBiome")]
-        private static void AddKnownBiome(ref Player __instance, ref Heightmap.Biome biome)
+        private static void AddKnownBiome(ref Player __instance, ref BiomeSector biome)
         {
             if (!__instance.IsBiomeKnown(biome))
             {
@@ -48,8 +48,8 @@ namespace ExpertExplorer.Patches
                 return;
 
             // make sure we get the zone info as soon as the player spawns
-            Vector2i zone = ZoneSystem.GetZone(__instance.transform.position);
-            ZoneHelper.Instance.Client_RequestZoneData(zone);
+            Vector2s zone = ZoneSystem.GetZone(__instance.transform.position);
+            ZoneHelper.Instance.Client_RequestZoneData(zone.ToVector2i());
         }
     }
 }
