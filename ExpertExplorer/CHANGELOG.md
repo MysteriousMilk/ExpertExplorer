@@ -1,3 +1,7 @@
+### Version 1.7
+------
+- Fix issues and rebuild for Valheim 1.0
+
 ### Version 1.6
 ------
 - Rebuild for Valheim patch 0.221.10

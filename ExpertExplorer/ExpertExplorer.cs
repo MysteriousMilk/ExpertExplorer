@@ -24,8 +24,10 @@ namespace ExpertExplorer
     {
         public const string PluginGUID = "com.milkwyzard.ExpertExplorer";
         public const string PluginName = "ExpertExplorer";
-        public const string PluginVersion = "1.6.0";
+        public const string PluginVersion = "1.7.0";
         public const string SkillId = $"{PluginGUID}.Exploration";
+        public const string LegacySaveFormat = "1.6.0";
+        public static System.Version Version = new System.Version(PluginVersion);
         
         // Use this class to add your own localization to the game
         // https://valheim-modding.github.io/Jotunn/tutorials/localization.html
@@ -38,16 +40,16 @@ namespace ExpertExplorer
         private const float ZONE_RPC_REQUEST_FREQUENCY = 2.0f;
 
         private static ZoneData currentZoneData = null;
-        private static Vector2i currentZone;
+        private static Vector2s currentZone;
         private static string lastEvaluatedLocation = string.Empty;
         private static float zoneCheckTimer = 0.0f;
         private static float zoneRpcRequestTimer = 0.0f;
         private static bool introLastFrame = false;
         private static bool locationsAvailable = false;
 
-        private static Dictionary<Vector2i, ZoneData> zoneDataCache = new Dictionary<Vector2i, ZoneData>();
-        private static Dictionary<Vector2i, Sprite> locationSpriteMap = new Dictionary<Vector2i, Sprite>();
-        private static Dictionary<Vector2i, Minimap.PinData> locationPins = new Dictionary<Vector2i, Minimap.PinData>();
+        private static Dictionary<Vector2s, ZoneData> zoneDataCache = new Dictionary<Vector2s, ZoneData>();
+        private static Dictionary<Vector2s, Sprite> locationSpriteMap = new Dictionary<Vector2s, Sprite>();
+        private static Dictionary<Vector2s, Minimap.PinData> locationPins = new Dictionary<Vector2s, Minimap.PinData>();
 
         private static List<string> specialLocations = new List<string>()
         {
@@ -328,7 +330,7 @@ namespace ExpertExplorer
                 // check to see if the timer has elapsed
                 if (zoneCheckTimer == 0.0f)
                 {
-                    Vector2i zone = ZoneSystem.GetZone(playerPos);
+                    Vector2s zone = ZoneSystem.GetZone(playerPos);
 
                     if (zone != currentZone)
                     {
@@ -343,7 +345,7 @@ namespace ExpertExplorer
                     if (currentZoneData == null && zoneRpcRequestTimer == 0f)
                     {
                         zoneRpcRequestTimer = ZONE_RPC_REQUEST_FREQUENCY;
-                        ZoneHelper.Instance.Client_RequestZoneData(currentZone);
+                        ZoneHelper.Instance.Client_RequestZoneData(currentZone.ToVector2i());
                     }
 
                     zoneCheckTimer = ZONE_CHECK_FREQUENCY;
@@ -534,7 +536,7 @@ namespace ExpertExplorer
         private static void PinLocation(ZoneData zoneData, PlayerExplorationData explorationData)
         {
             Vector3 pinPos = zoneData.LocationPosition;
-            Vector2i zone = zoneData.ZoneId;
+            Vector2s zone = zoneData.ZoneId.ToVector2s();
             string pinName = zoneData.LocalizedLocationName;
 
             var pinData = Minimap.instance.AddPin(pinPos, Minimap.PinType.Icon3, pinName, true, false, 0L);

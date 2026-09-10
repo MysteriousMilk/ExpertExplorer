@@ -39,7 +39,7 @@ namespace ExpertExplorer
             ZoneData data = new ZoneData();
             data.ZoneId = zone;
 
-            if (ZoneSystem.instance.m_locationInstances.TryGetValue(zone, out var instance))
+            if (ZoneSystem.instance.m_locationInstances.TryGetValue(zone.ToVector2s(), out var instance))
             {
                 data.LocationPrefab = instance.m_location != null ? instance.m_location.m_prefabName : string.Empty;
                 data.LocationRadiusMax = instance.m_location != null ? Mathf.Max(instance.m_location.m_exteriorRadius, instance.m_location.m_interiorRadius) : 0f;
