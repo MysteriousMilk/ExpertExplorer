@@ -128,9 +128,11 @@ namespace ExpertExplorer
                 return;
             }
 
+            bool isLegacySave = false;
             LoadValue(fromPlayer, "PlayerExplorationData", out var ver);
 
-            bool isLegacySave = IsLegacySave(ver);
+            if (!string.IsNullOrEmpty(ver))
+                isLegacySave = IsLegacySave(ver);
 
             if (isLegacySave)
                 Jotunn.Logger.LogInfo($"Loading legacy PlayerExplorationData.");
