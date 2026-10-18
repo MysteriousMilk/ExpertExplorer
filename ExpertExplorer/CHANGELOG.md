@@ -1,3 +1,8 @@
+### Version 1.8
+------
+- Add localization strings for new locations found in the Deep North.
+- Add guard against empty field when loading an existing save file with PlayerExplorationData.
+
 ### Version 1.7
 ------
 - Fix issues and rebuild for Valheim 1.0

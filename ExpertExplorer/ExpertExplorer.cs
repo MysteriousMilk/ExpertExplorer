@@ -24,7 +24,7 @@ namespace ExpertExplorer
     {
         public const string PluginGUID = "com.milkwyzard.ExpertExplorer";
         public const string PluginName = "ExpertExplorer";
-        public const string PluginVersion = "1.7.0";
+        public const string PluginVersion = "1.8.0";
         public const string SkillId = $"{PluginGUID}.Exploration";
         public const string LegacySaveFormat = "1.6.0";
         public static System.Version Version = new System.Version(PluginVersion);
@@ -61,7 +61,10 @@ namespace ExpertExplorer
             "Bonemass",
             "Vendor_BlackForest",
             "Hildir_camp",
+            "BogWitch_Camp",
             "Mistlands_DvergrBossEntrance1",
+            "DN_Bossroom",
+            "FaderLocation",
             "MWL_PlainsTavern1",                // Extra vendor location from More World Locations (MWL) mod(s)
             "MWL_PlainsCamp1",                  // Extra vendor location from More World Locations (MWL) mod(s)
             "MWL_BlackForestBlacksmith1",       // Extra vendor location from More World Locations (MWL) mod(s)
@@ -76,6 +79,7 @@ namespace ExpertExplorer
             "Mistlands_DvergrBossEntrance1",
             "Hildir_cave",
             "Hildir_crypt",
+            "TrollCave02",
             "Crypt2",
             "Crypt3",
             "Crypt4",
@@ -83,6 +87,16 @@ namespace ExpertExplorer
             "Mistlands_DvergrTownEntrance2",
             "MountainCave02",
             "SunkenCrypt4",
+            "BearCave",
+            "TrollCave02",
+            "MorgenHole1",
+            "MorgenHole2",
+            "MorgenHole3",
+            "PlaceofMystery3",
+            "TheDarkestHole",
+            "TheHole01",
+            "MorkBorg",
+            "CharredFortress",
             "BFD_Exterior"                  // // Extra dungion location from Underground Ruins mod
         };
 
