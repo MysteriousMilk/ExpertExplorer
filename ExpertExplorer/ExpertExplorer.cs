@@ -24,7 +24,7 @@ namespace ExpertExplorer
     {
         public const string PluginGUID = "com.milkwyzard.ExpertExplorer";
         public const string PluginName = "ExpertExplorer";
-        public const string PluginVersion = "1.7.0";
+        public const string PluginVersion = "1.8.0";
         public const string SkillId = $"{PluginGUID}.Exploration";
         public const string LegacySaveFormat = "1.6.0";
         public static System.Version Version = new System.Version(PluginVersion);

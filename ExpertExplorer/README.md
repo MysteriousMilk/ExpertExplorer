@@ -31,6 +31,10 @@ You can report issues with the mod at the github link below.\
 Additionally, you can reach me in the [Valheim Modding Discord](https://discord.com/invite/GUEBuCuAMz) under the name Milk.
 
 ## Changelog
+**v1.8 - Deep North Localization Update**
+- Add localization strings for new locations found in the Deep North.
+- Add guard against empty field when loading an existing save file with PlayerExplorationData.
+
 **v1.7 - Valheim 1.0 (Deep North) Compatibility**
 - Fix issues and rebuild for Valheim 1.0
 
